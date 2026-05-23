@@ -1238,11 +1238,12 @@
     </h2>
     <p class="text-mute mb-8 max-w-xl mx-auto text-lg">drop your email + a line about why you're here. first 50 get a free 7-day pass. zero spam, ever.</p>
 
-    <form id="waitlist-form" class="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto">
+    <form id="waitlist-form" method="POST" target="waitlist-iframe" class="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto">
       <input required type="text" name="name" placeholder="your name" class="flex-1 px-5 py-3.5 rounded-full bg-base/60 border border-line2 text-ink placeholder:text-dim focus:border-coral transition">
       <input required type="email" name="email" placeholder="email" class="flex-1 px-5 py-3.5 rounded-full bg-base/60 border border-line2 text-ink placeholder:text-dim focus:border-coral transition">
       <button type="submit" class="btn-primary px-6 py-3.5 rounded-full whitespace-nowrap">join →</button>
     </form>
+    <iframe name="waitlist-iframe" style="display:none" aria-hidden="true" tabindex="-1"></iframe>
     <div id="waitlist-success" class="hidden text-center">
       <p class="hand text-4xl text-coral mb-2">you're in ♡</p>
       <p class="text-mute text-sm">we'll email when the door opens. check spam just in case.</p>
@@ -1525,49 +1526,33 @@
     });
   })();
 
-  // ============ WAITLIST FORM → Google Sheets via Apps Script ============
+  // ============ WAITLIST FORM → Google Sheets via hidden-iframe submit ============
   (function() {
-    // ⬇️ REPLACE THIS WITH YOUR APPS SCRIPT WEB APP URL ⬇️
+    // ⬇️ Apps Script Web App URL ⬇️
     const WAITLIST_ENDPOINT = 'https://script.google.com/macros/s/AKfycbyWL_pyQV0mL20FlFDxIBhcVwwX2AdTszO1M_nbK2hXVCQ8OHFgbFV0AvAYBD-koBp5/exec';
 
     const form = document.getElementById('waitlist-form');
     const success = document.getElementById('waitlist-success');
     if (!form) return;
 
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
+    // set form action from the constant (form submits naturally to hidden iframe)
+    form.setAttribute('action', WAITLIST_ENDPOINT);
+
+    form.addEventListener('submit', (e) => {
+      // ⚠️ do NOT preventDefault — let the browser submit the form to the iframe
       const btn = form.querySelector('button[type="submit"]');
-      const originalText = btn.textContent;
-
-      if (WAITLIST_ENDPOINT.startsWith('PASTE_')) {
-        alert('Heads up: WAITLIST_ENDPOINT is not configured yet. See the README / setup steps.');
-        return;
-      }
-
       btn.textContent = 'joining...';
       btn.disabled = true;
       btn.style.opacity = '0.7';
 
-      try {
-        const formData = new FormData(form);
-        const data = {
-          name: formData.get('name'),
-          email: formData.get('email')
-        };
-        await fetch(WAITLIST_ENDPOINT, {
-          method: 'POST',
-          body: JSON.stringify(data),
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          mode: 'no-cors'
-        });
-        // 'no-cors' means we can't read the response, but the POST still went through
-        // success — swap form for thank-you
-        form.classList.add('hidden');
-        success.classList.remove('hidden');
-        // confetti-ish heart burst on submit
+      // give the form time to actually submit, then show success
+      setTimeout(() => {
         const r = form.getBoundingClientRect();
         const cx = r.left + r.width / 2;
         const cy = r.top + r.height / 2;
+        form.classList.add('hidden');
+        success.classList.remove('hidden');
+        // heart burst
         const emojis = ['♡', '✦', '✿', '★'];
         const colors = ['#FF7A66', '#FF8FB5', '#FFD56B', '#9FD9B5'];
         for (let i = 0; i < 14; i++) {
@@ -1583,13 +1568,7 @@
           });
           setTimeout(() => el.remove(), 1200);
         }
-      } catch (err) {
-        console.error(err);
-        btn.textContent = originalText;
-        btn.disabled = false;
-        btn.style.opacity = '';
-        alert('Something broke. Try again?');
-      }
+      }, 800);
     });
   })();
 </script>
