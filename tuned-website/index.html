@@ -1550,9 +1550,14 @@
 
       try {
         const formData = new FormData(form);
+        const data = {
+          name: formData.get('name'),
+          email: formData.get('email')
+        };
         await fetch(WAITLIST_ENDPOINT, {
           method: 'POST',
-          body: formData,
+          body: JSON.stringify(data),
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
           mode: 'no-cors'
         });
         // 'no-cors' means we can't read the response, but the POST still went through
