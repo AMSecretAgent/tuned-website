@@ -1550,7 +1550,12 @@
 
       try {
         const formData = new FormData(form);
-        await fetch(WAITLIST_ENDPOINT, { method: 'POST', body: formData });
+        await fetch(WAITLIST_ENDPOINT, {
+          method: 'POST',
+          body: formData,
+          mode: 'no-cors'
+        });
+        // 'no-cors' means we can't read the response, but the POST still went through
         // success — swap form for thank-you
         form.classList.add('hidden');
         success.classList.remove('hidden');
