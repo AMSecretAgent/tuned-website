@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TuneD — the internet feels good here. finally.</title>
-<meta name="description" content="A tiny community where strangers share hidden stories at 2am, play games, get matched anonymously for 48 hours, and turn into each other's favorite people.">
+<meta name="description" content="A private social community for people who miss late-night conversations with strangers, anonymous game nights, and the right corners of the internet. Friendship-first. Dating optional.">
 <meta property="og:title" content="TuneD — the internet feels good here. finally.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -313,6 +313,33 @@
     box-shadow: 0 0 40px -10px rgba(255,122,102,0.35), 0 1px 0 rgba(255,255,255,0.06) inset;
   }
 
+  /* founding seats progress bar */
+  .seat-bar {
+    background: rgba(255,255,255,0.06);
+    border-radius: 999px;
+    height: 6px;
+    overflow: hidden;
+    position: relative;
+  }
+  .seat-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #FF7A66, #FF8FB5, #FFD56B);
+    border-radius: 999px;
+    position: relative;
+    overflow: hidden;
+  }
+  .seat-bar-fill::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.45), transparent);
+    animation: seat-shimmer 2.6s ease-in-out infinite;
+  }
+  @keyframes seat-shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(200%); }
+  }
+
   input:focus, button:focus, a:focus { outline: 2px solid rgba(255,176,136,0.5); outline-offset: 2px; }
 
   /* discord-style channel pill (for nested mockups) */
@@ -336,7 +363,6 @@
     .reveal, .reveal-children > *, .word-reveal { opacity: 1 !important; transform: none !important; }
   }
 
-  /* dot-divider keeps showing up — swap to nothing, we use squiggle divs instead */
   .dot-divider { display: none; }
 </style>
 </head>
@@ -345,7 +371,6 @@
 <!-- ============ NAV ============ -->
 <nav class="relative z-30 px-6 lg:px-10 py-5 flex items-center justify-between border-b border-line backdrop-blur-sm" style="background: rgba(14,8,23,0.75);">
   <a href="#" class="flex items-center gap-2.5">
-    <!-- mascot-ish logo: little vinyl -->
     <div class="relative w-9 h-9">
       <svg viewBox="0 0 36 36" class="w-9 h-9">
         <circle cx="18" cy="18" r="17" fill="#0E0817" stroke="#FF7A66" stroke-width="1.5"/>
@@ -363,7 +388,7 @@
   <div class="hidden md:flex items-center gap-7 text-sm text-mute">
     <a href="#why" class="hover:text-ink transition">why</a>
     <a href="#nights" class="hover:text-ink transition">what we do</a>
-    <a href="#pricing" class="hover:text-ink transition">pricing</a>
+    <a href="#pricing" class="hover:text-ink transition">membership</a>
     <a href="#faq" class="hover:text-ink transition">faq</a>
   </div>
   <a href="#pricing" class="btn-primary text-sm px-5 py-2 rounded-full">come in →</a>
@@ -405,7 +430,7 @@
       </div>
 
       <p class="reveal mt-16 max-w-xl text-lg text-mute leading-relaxed">
-        a tiny community where strangers share <strong class="text-ink">hidden stories at 2am</strong>, play <strong class="text-ink">scribbl till 1am</strong>, get matched <strong class="text-ink">anonymously for 48 hours</strong>, give each other the advice they wish they'd gotten — and slowly turn into each other's favorite people.
+        a private little community where strangers share <strong class="text-ink">hidden stories at 2am</strong>, play <strong class="text-ink">scribbl till 1am</strong>, get <strong class="text-ink">paired anonymously for 48-hour conversations</strong>, give each other the advice they wish they'd gotten — and slowly turn into each other's favorite people.
       </p>
 
       <div class="reveal mt-10 flex flex-col sm:flex-row items-start gap-3 relative">
@@ -413,7 +438,7 @@
           come in for ₹99 →
         </a>
         <a href="#waitlist" class="btn-ghost px-7 py-3.5 rounded-full text-base">
-          free 7-day trial
+          request a free 7-day pass
         </a>
         <!-- handwritten arrow pointing to primary CTA -->
         <div class="hand absolute mobile-hide" style="top: -45px; left: 20px; font-size: 1.6rem; color: #FF8FB5; transform: rotate(-6deg);">
@@ -421,7 +446,25 @@
         </div>
       </div>
 
-      <div class="reveal mt-12 flex items-center gap-4">
+      <!-- friendship-first tagline (compliance + soul) -->
+      <p class="reveal mt-5 text-sm font-mono uppercase tracking-widest text-dim">
+        friendship-first.&nbsp; dating optional.&nbsp; <span style="color:#FFB088">membership required.</span>
+      </p>
+
+      <!-- founding seats counter -->
+      <div class="reveal mt-7 max-w-md p-4 rounded-2xl flex items-center gap-4" style="background: rgba(255,255,255,0.025); border: 1px solid rgba(255,143,181,0.25);">
+        <div class="flex-1">
+          <div class="flex items-baseline justify-between mb-2">
+            <span class="font-mono text-[10px] uppercase tracking-widest" style="color:#FFB088;">founding seats</span>
+            <span class="font-mono text-xs"><span style="color:#FFD56B;font-weight:600;">43</span><span class="text-dim"> / 100 claimed</span></span>
+          </div>
+          <div class="seat-bar">
+            <div class="seat-bar-fill" style="width:43%;"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="reveal mt-10 flex items-center gap-4">
         <span class="hand text-2xl text-coral" style="transform: rotate(-1deg); display:inline-block;">no swiping.</span>
         <span class="hand text-2xl text-peach" style="transform: rotate(2deg); display:inline-block;">no performance.</span>
         <span class="hand text-2xl text-pink" style="transform: rotate(-2deg); display:inline-block;">no pressure.</span>
@@ -468,23 +511,17 @@
 
           <!-- LAMP -->
           <svg class="absolute" style="top:38%;left:4%;" width="62" height="92" viewBox="0 0 62 92">
-            <!-- shade -->
             <path d="M 10 0 L 52 0 L 46 24 L 16 24 Z" fill="#FFB088" stroke="#FF7A66" stroke-width="1"/>
-            <!-- bulb glow -->
             <circle cx="31" cy="24" r="3" fill="#FFD56B"/>
-            <!-- stem -->
             <line x1="31" y1="24" x2="31" y2="80" stroke="#A89A8D" stroke-width="2"/>
-            <!-- base -->
             <ellipse cx="31" cy="84" rx="16" ry="3" fill="#221731"/>
             <path d="M 19 80 L 43 80 L 41 88 L 21 88 Z" fill="#3D2A4F" stroke="#5A3F73" stroke-width="0.5"/>
           </svg>
 
           <!-- TURNTABLE / RECORD PLAYER (center) -->
           <div class="absolute" style="bottom:6%;left:50%;transform:translateX(-50%);width:280px;height:200px;">
-            <!-- base -->
             <div class="absolute inset-x-0 bottom-0" style="height:88%;background:linear-gradient(180deg,#3D2A4F,#2A1A3D);border-radius:18px;border:1px solid rgba(255,255,255,0.1);box-shadow:0 12px 24px -12px rgba(0,0,0,0.5);"></div>
 
-            <!-- vinyl record -->
             <div class="absolute" style="top:14%;left:50%;transform:translateX(-50%);width:160px;height:160px;">
               <svg viewBox="0 0 160 160" class="spin-slow" style="transform-origin:80px 80px;">
                 <circle cx="80" cy="80" r="76" fill="#0E0817"/>
@@ -492,16 +529,13 @@
                 <circle cx="80" cy="80" r="64" fill="none" stroke="rgba(250,240,230,0.08)" stroke-width="0.5"/>
                 <circle cx="80" cy="80" r="52" fill="none" stroke="rgba(250,240,230,0.06)" stroke-width="0.5"/>
                 <circle cx="80" cy="80" r="40" fill="none" stroke="rgba(250,240,230,0.05)" stroke-width="0.5"/>
-                <!-- label -->
                 <circle cx="80" cy="80" r="28" fill="#FF7A66"/>
                 <text x="80" y="74" font-family="DM Serif Display" font-size="11" fill="#0E0817" text-anchor="middle" font-style="italic">tuned</text>
                 <text x="80" y="88" font-family="JetBrains Mono" font-size="6" fill="#0E0817" text-anchor="middle">vol.01 · india</text>
-                <!-- spindle hole -->
                 <circle cx="80" cy="80" r="2" fill="#0E0817"/>
               </svg>
             </div>
 
-            <!-- tonearm -->
             <svg class="absolute" style="top:0;right:0;width:110px;height:120px;" viewBox="0 0 110 120">
               <circle cx="92" cy="14" r="10" fill="#221731" stroke="#5A3F73" stroke-width="1"/>
               <line x1="92" y1="14" x2="48" y2="78" stroke="#A89A8D" stroke-width="3" stroke-linecap="round"/>
@@ -511,19 +545,16 @@
 
           <!-- two CHAI CUPS on right side -->
           <div class="absolute" style="bottom:14%;right:8%;width:120px;height:130px;">
-            <!-- steam wisps -->
             <svg class="absolute steam-1" style="top:0;left:20%;" width="6" height="30" viewBox="0 0 6 30"><path d="M3 28 Q 0 20, 3 12 Q 6 4, 3 0" stroke="#FAF0E6" stroke-width="1.5" fill="none" opacity="0.5" stroke-linecap="round"/></svg>
             <svg class="absolute steam-2" style="top:0;left:55%;" width="6" height="30" viewBox="0 0 6 30"><path d="M3 28 Q 6 20, 3 12 Q 0 4, 3 0" stroke="#FAF0E6" stroke-width="1.5" fill="none" opacity="0.5" stroke-linecap="round"/></svg>
             <svg class="absolute steam-3" style="top:0;left:80%;" width="6" height="30" viewBox="0 0 6 30"><path d="M3 28 Q 0 20, 3 12 Q 6 4, 3 0" stroke="#FAF0E6" stroke-width="1.5" fill="none" opacity="0.5" stroke-linecap="round"/></svg>
 
-            <!-- cup 1 -->
             <svg class="absolute" style="bottom:0;left:0;" width="56" height="60" viewBox="0 0 56 60">
               <path d="M 6 20 L 50 20 L 46 56 Q 46 60, 42 60 L 14 60 Q 10 60, 10 56 Z" fill="#FAF0E6" stroke="#A89A8D" stroke-width="1"/>
               <ellipse cx="28" cy="20" rx="22" ry="3.5" fill="#7A4828"/>
               <path d="M 48 28 Q 56 28, 56 38 Q 56 48, 48 48" fill="none" stroke="#A89A8D" stroke-width="1.5"/>
             </svg>
 
-            <!-- cup 2 (smaller, behind) -->
             <svg class="absolute" style="bottom:8px;right:0;" width="48" height="52" viewBox="0 0 56 60">
               <path d="M 6 20 L 50 20 L 46 56 Q 46 60, 42 60 L 14 60 Q 10 60, 10 56 Z" fill="#FFB088" stroke="#FF7A66" stroke-width="1"/>
               <ellipse cx="28" cy="20" rx="22" ry="3.5" fill="#5A3F73"/>
@@ -561,7 +592,7 @@
     <span class="text-pink italic">strange in a good way.</span><span class="text-mute">★</span>
     <span class="text-sun">fun.</span><span class="text-mute">★</span>
     <span class="text-ink italic">soft.</span><span class="text-mute">★</span>
-    <span class="text-mint">paid.</span><span class="text-mute">★</span>
+    <span class="text-mint">private.</span><span class="text-mute">★</span>
     <span class="text-coral">small.</span><span class="text-mute">★</span>
     <span class="text-ink">slow.</span><span class="text-mute">★</span>
     <span class="text-peach italic">warm.</span><span class="text-mute">★</span>
@@ -569,7 +600,7 @@
     <span class="text-pink italic">strange in a good way.</span><span class="text-mute">★</span>
     <span class="text-sun">fun.</span><span class="text-mute">★</span>
     <span class="text-ink italic">soft.</span><span class="text-mute">★</span>
-    <span class="text-mint">paid.</span><span class="text-mute">★</span>
+    <span class="text-mint">private.</span><span class="text-mute">★</span>
   </div>
 </div>
 
@@ -580,35 +611,35 @@
   <div class="relative z-10">
     <div class="reveal font-mono text-xs tracking-widest uppercase mb-4" style="color:#FF8FB5">/ 01 — why we made this</div>
     <h2 class="reveal display text-5xl lg:text-7xl leading-[1.0] max-w-3xl">
-      every dating app is <em class="grad-warm">boring</em>.<br>
-      and weirdly, <em class="ital" style="color:#C8A8E9">kinda scary</em>.
+      every app feels <em class="grad-warm">exhausting</em> now.<br>
+      and weirdly, <em class="ital" style="color:#C8A8E9">kinda lonely</em>.
     </h2>
 
     <div class="reveal-children mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
       <div class="glass rounded-2xl p-5">
         <div class="flex items-center gap-2 mb-4">
-          <div class="w-8 h-8 rounded-full bg-base flex items-center justify-center font-bold" style="color:#C8A8E9">H</div>
-          <span class="font-medium">hinge</span>
+          <div class="w-8 h-8 rounded-full bg-base flex items-center justify-center font-bold" style="color:#C8A8E9">G</div>
+          <span class="font-medium">the group chat</span>
         </div>
         <div class="space-y-2 mb-3">
-          <div class="text-xs px-3 py-2 rounded-2xl bg-white/5 inline-block">hey :)</div>
-          <div class="text-xs px-3 py-2 rounded-2xl inline-block" style="background:rgba(200,168,233,0.18);color:#C8A8E9">...hey</div>
+          <div class="text-xs px-3 py-2 rounded-2xl bg-white/5 inline-block">anyone up?</div>
+          <div class="text-xs text-dim italic">(read by 12 · 0 replies)</div>
           <div class="text-xs text-dim italic">(silence for 4 days)</div>
         </div>
-        <p class="text-sm text-mute leading-relaxed mt-3">three prompts and a selfie. every chat feels like a job interview. dies by day three.</p>
+        <p class="text-sm text-mute leading-relaxed mt-3">47 people online. nobody talks. the group chat is its own kind of lonely.</p>
       </div>
 
       <div class="glass rounded-2xl p-5">
         <div class="flex items-center gap-2 mb-4">
-          <div class="w-8 h-8 rounded-full bg-base flex items-center justify-center font-bold" style="color:#FFD56B">B</div>
-          <span class="font-medium">bumble</span>
+          <div class="w-8 h-8 rounded-full bg-base flex items-center justify-center font-bold" style="color:#FFD56B">A</div>
+          <span class="font-medium">"the apps"</span>
         </div>
         <div class="space-y-2 mb-3">
           <div class="text-xs px-3 py-2 rounded-2xl inline-block" style="background:rgba(255,213,107,0.18);color:#FFD56B">send pics?</div>
           <div class="text-xs text-dim italic">(deletes app)</div>
           <div class="text-xs text-dim italic">(redownloads next week)</div>
         </div>
-        <p class="text-sm text-mute leading-relaxed mt-3">second message is always "send pics." you delete weekly. you keep coming back.</p>
+        <p class="text-sm text-mute leading-relaxed mt-3">every chat is a job interview. every second message is "send pics." you delete weekly. you keep coming back.</p>
       </div>
 
       <div class="glass rounded-2xl p-5">
@@ -642,11 +673,11 @@
 
     <div class="reveal mt-20 max-w-3xl">
       <p class="display text-3xl lg:text-5xl leading-tight">
-        so we made a <em class="grad-warm">tiny room</em>.<br>
+        so we made a <em class="grad-warm">tiny private room</em>.<br>
         <span class="text-mute italic">that actually feels good to be in.</span>
       </p>
       <p class="mt-6 text-lg text-mute leading-relaxed max-w-2xl">
-        verified humans only. one-strike on creeps. lurking is encouraged. flirting if you want. dating optional. just a corner of the internet where nobody's trying to be anything. <strong class="text-ink">100 founding seats. ₹99 lets you in for a week.</strong>
+        verified humans only. one-strike on creep behavior. lurking encouraged. friendship first. conversations can become anything — some people stay friends, some become more, some are just good company at 2am. <strong class="text-ink">100 founding seats. ₹99 lets you in for a week.</strong>
       </p>
     </div>
   </div>
@@ -659,7 +690,6 @@
 
 <!-- ============ FOR YOU ============ -->
 <section class="relative px-6 lg:px-10 py-24 max-w-6xl mx-auto">
-  <!-- floating decorative star -->
   <svg class="absolute twinkle-1 mobile-hide" style="top:80px;right:8%;" width="20" height="20" viewBox="0 0 14 14" fill="#FFD56B"><path d="M7 0l1.5 5.5L14 7l-5.5 1.5L7 14l-1.5-5.5L0 7l5.5-1.5z"/></svg>
 
   <div class="reveal font-mono text-xs tracking-widest uppercase mb-4" style="color:#FF8FB5">/ 02 — if this sounds like you</div>
@@ -707,11 +737,11 @@
 
     <div class="glass rounded-2xl p-6">
       <div class="flex items-center gap-2 mb-4">
-        <div class="avatar" style="--c1:#FB7185; --c2:#FF8FB5; width:28px; height:28px; font-size:11px;">D</div>
-        <span class="text-sm text-mute">@dating_curious</span>
+        <div class="avatar" style="--c1:#FB7185; --c2:#FF8FB5; width:28px; height:28px; font-size:11px;">Q</div>
+        <span class="text-sm text-mute">@quietly_open</span>
       </div>
-      <p class="display text-2xl leading-snug">"hinge feels weird. but you're open."</p>
-      <p class="mt-3 text-sm text-mute leading-relaxed">we don't lead with photos. you find people through voice notes, songs, and how they think. faces are last.</p>
+      <p class="display text-2xl leading-snug">"i'd like to meet people. not on an app."</p>
+      <p class="mt-3 text-sm text-mute leading-relaxed">we don't lead with photos. you find people through voice notes, songs, and how they think. friendship first. anything else if it happens.</p>
     </div>
 
     <div class="rounded-2xl p-6" style="background: linear-gradient(135deg, rgba(255,143,181,0.18), rgba(200,168,233,0.14)); border: 1px solid rgba(255,143,181,0.35);">
@@ -753,9 +783,7 @@
       <!-- 1. INTRODUCTIONS — polaroid -->
       <div class="col-span-12 sm:col-span-6 lg:col-span-5 relative" style="transform:rotate(-2deg);">
         <div class="relative" style="background:#FAF0E6;padding:14px 14px 38px;border-radius:4px;box-shadow:0 24px 50px -20px rgba(0,0,0,0.7);">
-          <!-- tape strip -->
           <div class="absolute -top-3 left-1/2 -translate-x-1/2" style="width:96px;height:22px;background:rgba(255,213,107,0.85);transform:rotate(3deg);"></div>
-          <!-- "photo" -->
           <div style="background:linear-gradient(135deg,#FF7A66 0%,#FFB088 50%,#FF8FB5 100%);aspect-ratio:5/3;display:grid;place-items:center;border-radius:2px;">
             <span style="font-size:5rem;line-height:1;">👋</span>
           </div>
@@ -770,7 +798,6 @@
       <!-- 2. PLAYING GAMES — arcade tile -->
       <div class="col-span-12 sm:col-span-6 lg:col-span-4 relative" style="transform:rotate(1.5deg);">
         <div class="relative h-full p-6 rounded-2xl flex flex-col justify-between overflow-hidden" style="background:radial-gradient(circle at 30% 20%,#FFD56B 0%,#FF7A66 70%,#E85A45 100%);border:3px solid #0E0817;min-height:240px;">
-          <!-- pixel decorations -->
           <svg class="absolute" style="top:14px;right:14px;" width="40" height="14" viewBox="0 0 40 14" fill="#0E0817"><rect x="0" y="4" width="6" height="6"/><rect x="9" y="4" width="6" height="6"/><rect x="18" y="4" width="6" height="6"/></svg>
           <div>
             <div class="font-mono text-[10px] mb-2 tracking-widest" style="color:#0E0817;">★ HIGH SCORE ★</div>
@@ -783,16 +810,16 @@
         </div>
       </div>
 
-      <!-- 3. BLINDFOLD DROPS — mystery card with dashed border -->
+      <!-- 3. MIDNIGHT DROPS (was: blindfold drops) — mystery card with dashed border -->
       <div class="col-span-12 sm:col-span-12 lg:col-span-3 relative" style="transform:rotate(-1deg);">
         <div class="h-full rounded-2xl p-5 flex flex-col justify-between" style="background:linear-gradient(160deg,#3D2A4F 0%,#1A0E2E 100%);border:2px dashed rgba(255,143,181,0.45);min-height:240px;">
           <div>
             <div class="font-mono text-[9px] uppercase tracking-widest mb-3" style="color:#FF7A66;">★ daily · 9pm</div>
-            <div class="display text-3xl leading-tight mb-3">blindfold<br>drops</div>
-            <div class="hand text-xl" style="color:#FF8FB5;">"21f. delhi. up too late."</div>
+            <div class="display text-3xl leading-tight mb-3">midnight<br>drops</div>
+            <div class="hand text-xl" style="color:#FF8FB5;">"21. delhi. up too late."</div>
           </div>
           <div class="mt-4">
-            <div class="text-center text-[10px] font-mono tracking-widest px-3 py-2 rounded-full" style="background:rgba(255,143,181,0.18);border:1px solid rgba(255,143,181,0.4);color:#FF8FB5;">TAP IN →</div>
+            <div class="text-center text-[10px] font-mono tracking-widest px-3 py-2 rounded-full" style="background:rgba(255,143,181,0.18);border:1px solid rgba(255,143,181,0.4);color:#FF8FB5;">DROP IN →</div>
           </div>
         </div>
       </div>
@@ -811,7 +838,6 @@
             <div class="display text-3xl leading-tight" style="color:#FAF0E6;">dare</div>
             <div class="hand text-lg mt-3" style="color:#FAF0E6;opacity:0.9;">take a chance</div>
           </div>
-          <!-- divider with star -->
           <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full grid place-items-center" style="background:#FAF0E6;color:#0E0817;font-size:18px;font-weight:bold;">★</div>
         </div>
       </div>
@@ -819,9 +845,7 @@
       <!-- 5. HIDDEN STORIES — envelope -->
       <div class="col-span-12 sm:col-span-6 lg:col-span-5 relative" style="transform:rotate(-3deg);">
         <div class="relative p-7 rounded-sm" style="background:#FAF0E6;min-height:200px;box-shadow:0 24px 40px -20px rgba(0,0,0,0.7);">
-          <!-- envelope flap shape -->
           <div class="absolute inset-x-0 top-0" style="height:38%;background:linear-gradient(180deg,#E8D9C0 0%,#FAF0E6 100%);clip-path:polygon(0 0, 50% 100%, 100% 0);"></div>
-          <!-- wax seal -->
           <div class="absolute" style="top:32%;left:50%;transform:translate(-50%,-50%) rotate(-8deg);width:54px;height:54px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#FF8FB5 0%,#9276B8 100%);display:grid;place-items:center;color:#FAF0E6;font-family:'DM Serif Display',serif;font-size:24px;box-shadow:0 4px 8px rgba(0,0,0,0.3);">t</div>
 
           <div class="relative pt-12">
@@ -838,7 +862,6 @@
           <div class="text-center">
             <div class="font-mono text-[10px] uppercase tracking-widest" style="color:#C8A8E9;">side a · sat 11pm</div>
           </div>
-          <!-- spinning vinyl -->
           <div class="relative" style="width:130px;height:130px;">
             <svg viewBox="0 0 130 130" class="spin-slow" style="transform-origin:65px 65px;width:100%;height:100%;">
               <circle cx="65" cy="65" r="62" fill="#0E0817"/>
@@ -856,10 +879,9 @@
         </div>
       </div>
 
-      <!-- 7. ADVICE CIRCLE — crystal ball / magic 8 -->
+      <!-- 7. ADVICE CIRCLE -->
       <div class="col-span-12 sm:col-span-6 lg:col-span-4 relative" style="transform:rotate(-2deg);">
         <div class="h-full rounded-2xl p-6 relative overflow-hidden" style="background:radial-gradient(ellipse at 30% 30%,#9FD9B5 0%,#5BAE7E 60%,#3D7A52 100%);min-height:220px;">
-          <!-- magic 8 ball window -->
           <div class="absolute right-5 top-5 w-20 h-20 rounded-full grid place-items-center" style="background:radial-gradient(circle at 30% 30%,#FAF0E6 0%,#A89A8D 80%,#5A4F45 100%);">
             <div class="w-14 h-14 rounded-full grid place-items-center" style="background:#0F0814;">
               <span class="hand text-[10px] text-center leading-tight" style="color:#9FD9B5;">ask<br>again</span>
@@ -876,9 +898,7 @@
       <!-- 8. CONFESSIONS — folded note with wax seal -->
       <div class="col-span-12 sm:col-span-6 lg:col-span-3 relative" style="transform:rotate(3deg);">
         <div class="h-full p-5 relative" style="background:#FAF0E6;border-radius:2px;min-height:220px;box-shadow:0 24px 40px -20px rgba(0,0,0,0.6);background-image:linear-gradient(90deg,transparent 49.5%,rgba(168,154,141,0.3) 50%,transparent 50.5%);">
-          <!-- crumpled corner -->
           <div class="absolute -top-2 -right-2 w-8 h-8" style="background:linear-gradient(225deg,rgba(168,154,141,0.5) 0%,transparent 50%);clip-path:polygon(100% 0,100% 100%,0 100%);"></div>
-          <!-- stamp -->
           <div class="absolute top-3 right-3 w-12 h-12 rounded-sm grid place-items-center text-xs font-mono" style="background:#FF7A66;color:#FAF0E6;transform:rotate(8deg);">★<br>ANON</div>
           <div class="relative pt-12">
             <div class="font-mono text-[10px] uppercase tracking-widest mb-2" style="color:#FF7A66;">always on</div>
@@ -892,7 +912,6 @@
       <!-- 9. OPEN MIC — ticket stub -->
       <div class="col-span-12 sm:col-span-12 lg:col-span-5 relative" style="transform:rotate(-1deg);">
         <div class="h-full flex rounded-xl overflow-hidden relative" style="min-height:180px;box-shadow:0 24px 40px -20px rgba(0,0,0,0.6);">
-          <!-- main ticket body -->
           <div class="flex-1 p-6 relative" style="background:linear-gradient(135deg,#FF7A66,#FF8FB5);">
             <div class="font-mono text-[10px] uppercase tracking-widest" style="color:#0E0817;opacity:0.7;">★ admit one ★</div>
             <div class="display text-4xl mt-1 leading-[0.95]" style="color:#0E0817;">open mic<br><em class="ital">night.</em></div>
@@ -905,9 +924,7 @@
               <span>everyone claps</span>
             </div>
           </div>
-          <!-- perforated divider -->
           <div class="w-1 self-stretch" style="background:repeating-linear-gradient(180deg,transparent 0,transparent 4px,rgba(14,8,20,0.5) 4px,rgba(14,8,20,0.5) 8px);"></div>
-          <!-- stub -->
           <div class="w-20 p-3 flex flex-col items-center justify-between" style="background:linear-gradient(135deg,#FFB088,#FFD56B);">
             <div class="font-mono text-[9px] uppercase tracking-widest text-center" style="color:#0E0817;opacity:0.6;">stub</div>
             <div class="display text-3xl" style="color:#0E0817;writing-mode:vertical-rl;transform:rotate(180deg);">tuneD</div>
@@ -917,13 +934,12 @@
       </div>
     </div>
 
-    <p class="text-xs font-mono text-dim text-center mb-16">↑ plus karaoke nights, geoguessr championships, two-line story circles, anonymous compliment chains, "show your room (no face)" nights, letter to your future self, co-working rooms...</p>
+    <p class="text-xs font-mono text-dim text-center mb-16">↑ plus movie nights, meme wars, music listening parties, karaoke rooms, geoguessr championships, two-line story circles, anonymous compliment chains, "show your room (no face)" nights, letter to your future self, co-working rooms...</p>
 
-    <!-- FEATURED BLIND DATE CARD -->
+    <!-- FEATURED MYSTERY CONVERSATION CARD (formerly "blind date nights") -->
     <div class="reveal rounded-3xl p-8 md:p-10 relative overflow-hidden mb-16" style="background: linear-gradient(135deg, rgba(255,143,181,0.15), rgba(200,168,233,0.1), rgba(255,176,136,0.12)); border: 1px solid rgba(255,143,181,0.4);">
       <div class="orb orb-pink" style="width:300px;height:300px;top:-80px;right:-80px;opacity:0.25;"></div>
 
-      <!-- floating tiny stars -->
       <svg class="absolute twinkle-1" style="top:15%;left:6%;" width="14" height="14" viewBox="0 0 14 14" fill="#FFD56B"><path d="M7 0l1.5 5.5L14 7l-5.5 1.5L7 14l-1.5-5.5L0 7l5.5-1.5z"/></svg>
       <svg class="absolute twinkle-2" style="bottom:25%;left:3%;" width="10" height="10" viewBox="0 0 14 14" fill="#FF8FB5"><path d="M7 0l1.5 5.5L14 7l-5.5 1.5L7 14l-1.5-5.5L0 7l5.5-1.5z"/></svg>
 
@@ -933,13 +949,13 @@
             <span>★ FEATURED EVERY WEEKEND</span>
           </div>
           <h3 class="display text-4xl lg:text-5xl leading-[1.0] mb-4">
-            blind date nights.<br>
+            mystery conversation nights.<br>
             <em class="grad-warm">48 hours, anonymous.</em>
           </h3>
           <p class="text-mute text-base leading-relaxed max-w-xl mb-5">
-            saturday night, two members get paired anonymously. both get separate channels with custom IDs (no real names, no photos, no instagram handles). <strong class="text-ink">48 hours of text-only conversation.</strong> at the end — both decide whether to reveal or stay strangers.
+            saturday night, two members get paired anonymously. both get separate channels with custom IDs (no real names, no photos, no instagram handles). <strong class="text-ink">48 hours of text-only conversation.</strong> at the end — both decide whether to swap handles or stay strangers.
           </p>
-          <p class="hand text-2xl" style="color:#FF8FB5;">either it becomes something. or a story.</p>
+          <p class="hand text-2xl" style="color:#FF8FB5;">some stay strangers. some become friends. some become more.</p>
         </div>
 
         <div class="glass rounded-2xl p-4 w-full md:w-[280px] flex-shrink-0">
@@ -967,7 +983,7 @@
           </div>
 
           <div class="mt-3 pt-2 border-t border-line">
-            <button class="w-full py-2 rounded-lg text-[11px] font-medium" style="background: rgba(255,255,255,0.06); color: #A89A8D;">reveal in 36h • or don't</button>
+            <button class="w-full py-2 rounded-lg text-[11px] font-medium" style="background: rgba(255,255,255,0.06); color: #A89A8D;">swap handles in 36h • or don't</button>
           </div>
         </div>
       </div>
@@ -990,20 +1006,20 @@
 
   <div class="reveal-children mt-16 grid grid-cols-1 md:grid-cols-3 gap-5">
     <div class="glass rounded-2xl p-7">
-      <div class="font-mono text-xs text-dim mb-4">01 / PAYMENT</div>
+      <div class="font-mono text-xs text-dim mb-4">01 / MEMBERSHIP</div>
       <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-5" style="background: linear-gradient(135deg, #FF7A66, #FF8FB5);">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0E0817" stroke-width="2.5"><path d="M3 10h18M5 6h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"/></svg>
       </div>
-      <h3 class="display text-2xl mb-2">pay. instantly inside.</h3>
-      <p class="text-sm text-mute leading-relaxed">razorpay → upi, cards, all that. the second your payment goes through, you get the discord invite. no waitlist. no approval queue.</p>
+      <h3 class="display text-2xl mb-2">join the community.</h3>
+      <p class="text-sm text-mute leading-relaxed">razorpay → upi, cards, all that. the second your membership goes through, you get the private discord invite. no waitlist queue. no approval wait.</p>
     </div>
     <div class="glass rounded-2xl p-7">
       <div class="font-mono text-xs text-dim mb-4">02 / VERIFICATION</div>
       <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-5" style="background: linear-gradient(135deg, #9FD9B5, #FFD56B);">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0E0817" stroke-width="2.5"><path d="M9 12l2 2 4-4M12 22a10 10 0 1 1 0-20 10 10 0 0 1 0 20z"/></svg>
       </div>
-      <h3 class="display text-2xl mb-2">quick selfie check.</h3>
-      <p class="text-sm text-mute leading-relaxed">a real human mod reviews within 24 hours. only the mod sees it. it's deleted right after. this step is why people feel safe here.</p>
+      <h3 class="display text-2xl mb-2">quick check.</h3>
+      <p class="text-sm text-mute leading-relaxed">an optional verification helps keep the community genuine and low-spam. a real human mod reviews within 24 hours. only they see it. deleted right after.</p>
     </div>
     <div class="glass rounded-2xl p-7">
       <div class="font-mono text-xs text-dim mb-4">03 / YOU'RE IN</div>
@@ -1057,8 +1073,8 @@
       <div class="flex gap-3">
         <div class="w-8 flex-shrink-0"></div>
         <div class="flex-1">
-          <div class="text-base leading-relaxed">honest reason: we kept downloading hinge and bumble because everyone said we should. every time we opened them, this weird mix of <em class="ital" style="color:#FF8FB5">bored and stressed</em>.</div>
-          <div class="mt-2 text-base leading-relaxed text-mute">bored because all photos and prompts. stressed because every chat felt like an interview. and the whole thing was just... about dating. like that was the only thing you could do there.</div>
+          <div class="text-base leading-relaxed">honest reason: we kept downloading every social app because everyone said we should. every time we opened them, this weird mix of <em class="ital" style="color:#FF8FB5">bored and stressed</em>.</div>
+          <div class="mt-2 text-base leading-relaxed text-mute">bored because all photos and prompts. stressed because every chat felt like an interview. and the whole thing was always about one thing. like that was the only thing you could do there.</div>
         </div>
       </div>
 
@@ -1072,14 +1088,14 @@
       <div class="flex gap-3">
         <div class="w-8 flex-shrink-0"></div>
         <div class="flex-1">
-          <div class="text-base leading-relaxed">so we started thinking — what if we made a tiny room where you could just <em class="ital" style="color:#FFB088">be</em>. share a story that nobody knows. play scribbl on a tuesday. truth or dare at 11. get matched anonymously with a stranger for 48 hours. give advice you wish you'd gotten. flirt if you wanted. or just hang out if you didn't.</div>
+          <div class="text-base leading-relaxed">so we started thinking — what if we made a tiny private room where you could just <em class="ital" style="color:#FFB088">be</em>. share a story that nobody knows. play scribbl on a tuesday. truth or dare at 11. get paired anonymously with a stranger for 48 hours of conversation. give advice you wish you'd gotten. let things become whatever they become.</div>
         </div>
       </div>
 
       <div class="flex gap-3">
         <div class="w-8 flex-shrink-0"></div>
         <div class="flex-1">
-          <div class="text-base leading-relaxed">that's tuned. small on purpose. ₹99 lets you in for a week. show up. see if you like it. that's all we're asking.</div>
+          <div class="text-base leading-relaxed">that's tuned. a small private community. friendship-first. dating is a toggle you turn on. ₹99 lets you in for a week. show up. see if you like it. that's all we're asking.</div>
         </div>
       </div>
 
@@ -1108,23 +1124,62 @@
   <div class="orb orb-coral orb-2" style="width:400px;height:400px;bottom:0;right:-180px;opacity:0.18;"></div>
 
   <div class="relative z-10">
-    <div class="reveal font-mono text-xs tracking-widest uppercase mb-4" style="color:#FF7A66">/ 06 — the door</div>
+    <div class="reveal font-mono text-xs tracking-widest uppercase mb-4" style="color:#FF7A66">/ 06 — membership</div>
     <h2 class="reveal display text-5xl lg:text-7xl leading-[1.0] max-w-3xl">
       cheaper than a <em class="ital">zomato order</em>.<br>
       pick your <em class="grad-warm">stay.</em>
     </h2>
 
-    <div class="reveal mt-12 p-5 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4" style="background: linear-gradient(90deg, rgba(159,217,181,0.1), rgba(159,197,227,0.05)); border: 1px solid rgba(159,217,181,0.35);">
+    <!-- "what membership gets you" block — frames the purchase as community access, not dating access -->
+    <div class="reveal mt-10 p-6 rounded-2xl" style="background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.08);">
+      <div class="font-mono text-[10px] uppercase tracking-widest mb-4" style="color:#FFB088;">community membership includes</div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="flex items-start gap-2 text-sm">
+          <span class="text-coral text-base leading-none mt-0.5">✦</span>
+          <span>private discord spaces</span>
+        </div>
+        <div class="flex items-start gap-2 text-sm">
+          <span class="text-pink text-base leading-none mt-0.5">✦</span>
+          <span>voice lounges &amp; co-working rooms</span>
+        </div>
+        <div class="flex items-start gap-2 text-sm">
+          <span class="text-sun text-base leading-none mt-0.5">✦</span>
+          <span>weekly community events</span>
+        </div>
+        <div class="flex items-start gap-2 text-sm">
+          <span class="text-mint text-base leading-none mt-0.5">✦</span>
+          <span>anonymous games &amp; nights</span>
+        </div>
+        <div class="flex items-start gap-2 text-sm">
+          <span class="text-peach text-base leading-none mt-0.5">✦</span>
+          <span>movie &amp; listening parties</span>
+        </div>
+        <div class="flex items-start gap-2 text-sm">
+          <span class="text-lilac text-base leading-none mt-0.5">✦</span>
+          <span>curated social circles</span>
+        </div>
+        <div class="flex items-start gap-2 text-sm">
+          <span class="text-coral text-base leading-none mt-0.5">✦</span>
+          <span>limited-access rooms</span>
+        </div>
+        <div class="flex items-start gap-2 text-sm">
+          <span class="text-mint text-base leading-none mt-0.5">✦</span>
+          <span>human moderation 24/7</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="reveal mt-6 p-5 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4" style="background: linear-gradient(90deg, rgba(159,217,181,0.1), rgba(159,197,227,0.05)); border: 1px solid rgba(159,217,181,0.35);">
       <div class="flex items-center gap-4">
         <div class="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0" style="background: rgba(159,217,181,0.15); border: 1px solid rgba(159,217,181,0.4);">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9FD9B5" stroke-width="2"><path d="M12 2l3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg>
         </div>
         <div>
           <div class="font-mono text-[11px] uppercase tracking-widest mb-1" style="color:#9FD9B5">FIRST 50 · FREE WEEK PASS</div>
-          <div class="text-base text-ink">drop your email. first 50 on the waitlist get a free 7-day trial. no card. no card details.</div>
+          <div class="text-base text-ink">drop your email + a line about why you're here. first 50 on the waitlist get a free 7-day pass. no card.</div>
         </div>
       </div>
-      <a href="#waitlist" class="btn-ghost px-5 py-2.5 rounded-full text-sm whitespace-nowrap">claim trial →</a>
+      <a href="#waitlist" class="btn-ghost px-5 py-2.5 rounded-full text-sm whitespace-nowrap">request invite →</a>
     </div>
 
     <div class="reveal-children mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
@@ -1132,14 +1187,14 @@
         <div class="font-mono text-[11px] text-dim uppercase tracking-widest mb-2">/ a quick visit</div>
         <div class="display text-2xl mb-1">1 week</div>
         <div class="display text-6xl my-5">₹99</div>
-        <p class="text-sm text-mute mb-6 leading-relaxed">try us for a week. one voice room. one blindfold drop. decide.</p>
+        <p class="text-sm text-mute mb-6 leading-relaxed">try the community for a week. one voice lounge. one mystery pairing. decide.</p>
         <a href="https://rzp.io/l/REPLACE_WEEKLY" target="_blank" class="btn-ghost block text-center px-5 py-3 rounded-full text-sm">try a week</a>
       </div>
       <div class="glass rounded-2xl p-7">
         <div class="font-mono text-[11px] text-dim uppercase tracking-widest mb-2">/ a real stay</div>
         <div class="display text-2xl mb-1">1 month</div>
         <div class="display text-6xl my-5">₹299</div>
-        <p class="text-sm text-mute mb-6 leading-relaxed">four voice rooms. thirty blindfolds. enough to know if it clicks.</p>
+        <p class="text-sm text-mute mb-6 leading-relaxed">four voice lounges. thirty mystery pairings. enough to know if it clicks.</p>
         <a href="https://rzp.io/l/REPLACE_MONTHLY" target="_blank" class="btn-ghost block text-center px-5 py-3 rounded-full text-sm">get the month</a>
       </div>
       <div class="glass rounded-2xl p-7">
@@ -1154,12 +1209,22 @@
         <div class="font-mono text-[11px] uppercase tracking-widest mb-2" style="color:#FFB088">/ the vinyl</div>
         <div class="display text-2xl mb-1">lifetime pass</div>
         <div class="display text-6xl my-5 grad-warm">₹5,000</div>
-        <p class="text-sm text-mute mb-6 leading-relaxed">free forever. even when the app launches. founding badge nobody can buy later.</p>
+        <p class="text-sm text-mute mb-3 leading-relaxed">free forever. even when the app launches. founding badge nobody can buy later.</p>
+
+        <!-- founding seats progress -->
+        <div class="mb-5">
+          <div class="flex items-baseline justify-between mb-1.5">
+            <span class="font-mono text-[9px] uppercase tracking-widest text-dim">seats claimed</span>
+            <span class="font-mono text-[10px]"><span style="color:#FFD56B;font-weight:600;">43</span><span class="text-dim"> / 100</span></span>
+          </div>
+          <div class="seat-bar"><div class="seat-bar-fill" style="width:43%;"></div></div>
+        </div>
+
         <a href="https://rzp.io/l/REPLACE_LIFETIME" target="_blank" class="btn-primary block text-center px-5 py-3 rounded-full text-sm">grab a vinyl →</a>
       </div>
     </div>
 
-    <p class="mt-8 text-center text-xs font-mono text-dim">all prices in inr · payments are final · choose your tier carefully</p>
+    <p class="mt-8 text-center text-xs font-mono text-dim">all prices in inr · community membership subscription · your statement reads "tuned services" · payments are final</p>
   </div>
 </section>
 
@@ -1172,7 +1237,7 @@
 <section class="relative px-6 lg:px-10 py-24 max-w-6xl mx-auto">
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
     <div class="lg:col-span-5">
-      <div class="reveal font-mono text-xs tracking-widest uppercase mb-4" style="color:#9FD9B5">/ 07 — how we keep it safe</div>
+      <div class="reveal font-mono text-xs tracking-widest uppercase mb-4" style="color:#9FD9B5">/ 07 — built for safety</div>
       <h2 class="reveal display text-4xl lg:text-5xl leading-tight">
         we keep this <em class="ital" style="color:#FFB088">small</em><br>
         on purpose.
@@ -1186,8 +1251,8 @@
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9FD9B5" stroke-width="2"><path d="M9 12l2 2 4-4M12 22a10 10 0 1 1 0-20 10 10 0 0 1 0 20z"/></svg>
         </div>
         <div>
-          <h4 class="display text-xl mb-1">every new member, human-reviewed</h4>
-          <p class="text-sm text-mute">live selfie + ID check by a real mod within 24 hours. photo deleted after. slow on purpose.</p>
+          <h4 class="display text-xl mb-1">every member, human-reviewed</h4>
+          <p class="text-sm text-mute">a quick verification by a real mod within 24 hours. only they see it. deleted right after approval. private by default.</p>
         </div>
       </div>
       <div class="glass rounded-2xl p-5 flex gap-4">
@@ -1195,8 +1260,8 @@
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FF8FB5" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M4.93 4.93l14.14 14.14"/></svg>
         </div>
         <div>
-          <h4 class="display text-xl mb-1">one-strike on creeps</h4>
-          <p class="text-sm text-mute">one DM to a mod and a member's gone. no warnings, no "but he said sorry," no second chances.</p>
+          <h4 class="display text-xl mb-1">moderated spaces · one-strike on creeps</h4>
+          <p class="text-sm text-mute">human mods are around. one report to a mod and a member's gone. no warnings, no "but he said sorry," no second chances.</p>
         </div>
       </div>
       <div class="glass rounded-2xl p-5 flex gap-4">
@@ -1205,7 +1270,7 @@
         </div>
         <div>
           <h4 class="display text-xl mb-1">a handle, not your name</h4>
-          <p class="text-sm text-mute">most members go by a vibe handle. razorpay statement shows "tuned services" — no "dating" anywhere.</p>
+          <p class="text-sm text-mute">most members go by a vibe handle. the razorpay statement reads "tuned services" — nothing about your activity is visible outside the community.</p>
         </div>
       </div>
       <div class="glass rounded-2xl p-5 flex gap-4">
@@ -1213,8 +1278,8 @@
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFB088" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21v-2a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v2"/></svg>
         </div>
         <div>
-          <h4 class="display text-xl mb-1">women-only sub-channel</h4>
-          <p class="text-sm text-mute">run by female mods. available to verified female members from day one. reachable 24/7.</p>
+          <h4 class="display text-xl mb-1">report &amp; block systems · women-only sub-channel</h4>
+          <p class="text-sm text-mute">block any member with a tap. there's also a women-only sub-channel run by female mods, available to verified female members from day one.</p>
         </div>
       </div>
     </div>
@@ -1231,17 +1296,17 @@
   <div class="orb orb-pink orb-1" style="width:500px;height:500px;top:50%;left:50%;transform:translate(-50%,-50%);opacity:0.2;"></div>
 
   <div class="reveal relative z-10 max-w-3xl mx-auto glass rounded-3xl p-10 lg:p-14 text-center">
-    <div class="font-mono text-xs tracking-widest uppercase mb-4" style="color:#9FD9B5">/ b-side · the waitlist</div>
+    <div class="font-mono text-xs tracking-widest uppercase mb-4" style="color:#9FD9B5">/ b-side · request an invite</div>
     <h2 class="display text-4xl lg:text-6xl leading-tight mb-4">
-      not ready to pay?<br>
+      not ready yet?<br>
       <em class="grad-warm">that's fair.</em>
     </h2>
-    <p class="text-mute mb-8 max-w-xl mx-auto text-lg">drop your email + a line about why you're here. first 50 get a free 7-day pass. zero spam, ever.</p>
+    <p class="text-mute mb-8 max-w-xl mx-auto text-lg">drop your email + a line about why you're here. first 50 on the waitlist get a free 7-day pass. zero spam, ever.</p>
 
     <form id="waitlist-form" method="POST" target="waitlist-iframe" class="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto">
       <input required type="text" name="name" placeholder="your name" class="flex-1 px-5 py-3.5 rounded-full bg-base/60 border border-line2 text-ink placeholder:text-dim focus:border-coral transition">
       <input required type="email" name="email" placeholder="email" class="flex-1 px-5 py-3.5 rounded-full bg-base/60 border border-line2 text-ink placeholder:text-dim focus:border-coral transition">
-      <button type="submit" class="btn-primary px-6 py-3.5 rounded-full whitespace-nowrap">join →</button>
+      <button type="submit" class="btn-primary px-6 py-3.5 rounded-full whitespace-nowrap">request invite →</button>
     </form>
     <iframe name="waitlist-iframe" style="display:none" aria-hidden="true" tabindex="-1"></iframe>
     <div id="waitlist-success" class="hidden text-center">
@@ -1265,15 +1330,15 @@
         <span class="text-lg font-medium">is this an app or a website?</span>
         <span class="faq-plus text-2xl font-light" style="color:#FFB088">+</span>
       </summary>
-      <p class="mt-4 text-mute leading-relaxed">right now, neither — and that's intentional. the community lives on discord. you pay through this site, get an instant discord invite, you're in. the actual app launches later this year. lifetime pass holders get it free forever.</p>
+      <p class="mt-4 text-mute leading-relaxed">right now, neither — and that's intentional. the community lives on private discord spaces. you pay your membership through this site, get an instant invite, you're in. the actual app launches later this year. lifetime pass holders get it free forever.</p>
     </details>
 
     <details class="glass rounded-2xl p-6 group">
       <summary class="flex items-center justify-between">
-        <span class="text-lg font-medium">why pay for a discord server?</span>
+        <span class="text-lg font-medium">why pay for a community?</span>
         <span class="faq-plus text-2xl font-light" style="color:#FFB088">+</span>
       </summary>
-      <p class="mt-4 text-mute leading-relaxed">because every free indian discord gets overrun within a week. our price filters the energy we don't want. plus you're directly funding the app build. the price is the safety feature.</p>
+      <p class="mt-4 text-mute leading-relaxed">because every free indian community space gets overrun within a week. our small membership fee filters the energy we don't want. plus you're directly funding the app build. the price is the safety feature.</p>
     </details>
 
     <details class="glass rounded-2xl p-6 group">
@@ -1281,7 +1346,7 @@
         <span class="text-lg font-medium">is this a dating app?</span>
         <span class="faq-plus text-2xl font-light" style="color:#FFB088">+</span>
       </summary>
-      <p class="mt-4 text-mute leading-relaxed">it's a community where dating happens if it happens. most members are here for friendship + games + just hanging out. dating is a toggle you turn on. nobody's in your DMs unless you want them there.</p>
+      <p class="mt-4 text-mute leading-relaxed">no — it's a private social community. most members are here for friendship, games, voice lounges, and just hanging out. conversations can become anything: friendships, chemistry, or simply good company. dating is a toggle you turn on. nobody's in your DMs unless you want them there.</p>
     </details>
 
     <details class="glass rounded-2xl p-6 group">
@@ -1289,7 +1354,7 @@
         <span class="text-lg font-medium">i'm a girl. is it actually safe?</span>
         <span class="faq-plus text-2xl font-light" style="color:#FFB088">+</span>
       </summary>
-      <p class="mt-4 text-mute leading-relaxed">verification is mandatory and human-reviewed. one-strike ban on creep behavior — no warnings. there's a women-only sub-channel run by female mods. one DM to a mod = the creep is gone within hours.</p>
+      <p class="mt-4 text-mute leading-relaxed">verification is human-reviewed. one-strike ban on creep behavior — no warnings. there's a women-only sub-channel run by female mods. one report to a mod = the member is gone within hours. block any other member with a tap.</p>
     </details>
 
     <details class="glass rounded-2xl p-6 group">
@@ -1297,7 +1362,7 @@
         <span class="text-lg font-medium">what if my parents see this?</span>
         <span class="faq-plus text-2xl font-light" style="color:#FFB088">+</span>
       </summary>
-      <p class="mt-4 text-mute leading-relaxed">razorpay shows "tuned services" on your statement — no "dating" or "matching" anywhere. you sign in with a handle, not your name. only the verification mod sees your real photo, and it's deleted after approval.</p>
+      <p class="mt-4 text-mute leading-relaxed">razorpay shows "tuned services" on your statement — no other description anywhere. you sign in with a handle, not your name. only the verification mod sees your selfie, and it's deleted after approval.</p>
     </details>
 
     <details class="glass rounded-2xl p-6 group">
@@ -1313,7 +1378,7 @@
         <span class="text-lg font-medium">can i get a refund?</span>
         <span class="faq-plus text-2xl font-light" style="color:#FFB088">+</span>
       </summary>
-      <p class="mt-4 text-mute leading-relaxed">no — all payments are final. we keep things affordable (₹99 ≈ a momos plate) because we don't want refund overhead. try the free 7-day pass first if you're unsure, or start with the ₹99 weekly. that's literally why those tiers exist.</p>
+      <p class="mt-4 text-mute leading-relaxed">no — all membership payments are final. we keep things affordable (₹99 ≈ a momos plate) because we don't want refund overhead. try the free 7-day pass first if you're unsure, or start with the ₹99 weekly. that's literally why those tiers exist.</p>
     </details>
 
     <details class="glass rounded-2xl p-6 group">
@@ -1321,7 +1386,7 @@
         <span class="text-lg font-medium">i'm not "musical" or a gamer. can i still join?</span>
         <span class="faq-plus text-2xl font-light" style="color:#FFB088">+</span>
       </summary>
-      <p class="mt-4 text-mute leading-relaxed">absolutely. music + games are TWO of many things. there's also voice rooms, introductions, hidden stories, anonymous confessions, blind dates, advice circles, open mic, co-working. lurking in any of these is allowed. there's a slot for you.</p>
+      <p class="mt-4 text-mute leading-relaxed">absolutely. music + games are TWO of many things. there's also voice lounges, introductions, hidden stories, anonymous confessions, mystery pairings, advice circles, open mic, movie nights, co-working. lurking in any of these is allowed. there's a slot for you.</p>
     </details>
   </div>
 </section>
@@ -1330,7 +1395,6 @@
 <section class="relative px-6 lg:px-10 py-32 text-center overflow-hidden">
   <div class="orb orb-coral orb-2" style="width:500px;height:500px;bottom:-200px;left:50%;transform:translateX(-50%);opacity:0.3;"></div>
 
-  <!-- floating stars -->
   <svg class="absolute twinkle-1" style="top:20%;left:10%;" width="20" height="20" viewBox="0 0 14 14" fill="#FFD56B"><path d="M7 0l1.5 5.5L14 7l-5.5 1.5L7 14l-1.5-5.5L0 7l5.5-1.5z"/></svg>
   <svg class="absolute twinkle-2" style="top:30%;right:12%;" width="14" height="14" viewBox="0 0 14 14" fill="#FF8FB5"><path d="M7 0l1.5 5.5L14 7l-5.5 1.5L7 14l-1.5-5.5L0 7l5.5-1.5z"/></svg>
   <svg class="absolute twinkle-3" style="bottom:30%;left:18%;" width="16" height="16" viewBox="0 0 14 14" fill="#9FD9B5"><path d="M7 0l1.5 5.5L14 7l-5.5 1.5L7 14l-1.5-5.5L0 7l5.5-1.5z"/></svg>
@@ -1343,7 +1407,7 @@
     <p class="mt-8 text-mute max-w-md mx-auto text-lg">no algorithm pulling you in. no streak threatening to break. just a room. whenever you're ready.</p>
     <div class="mt-12 flex flex-col sm:flex-row items-center justify-center gap-3">
       <a href="#pricing" class="btn-primary px-8 py-4 rounded-full text-base" data-magnetic>come in for ₹99 →</a>
-      <a href="#waitlist" class="btn-ghost px-8 py-4 rounded-full text-base">or wait, free →</a>
+      <a href="#waitlist" class="btn-ghost px-8 py-4 rounded-full text-base">or request an invite, free →</a>
     </div>
     <p class="mt-12 hand text-3xl text-coral">see you inside ♡</p>
   </div>
@@ -1363,7 +1427,7 @@
         </svg>
         <span class="display text-2xl">tune<em class="italic" style="color:#FF8FB5">d</em></span>
       </div>
-      <p class="text-mute text-sm max-w-sm">a small community for indian gen z.<br>built by two friends. still in beta. say hi.</p>
+      <p class="text-mute text-sm max-w-sm">a small private community for indian gen z.<br>built by two friends. still in beta. say hi.</p>
     </div>
   </div>
   <div class="max-w-6xl mx-auto mt-10 pt-6 border-t border-line flex flex-col sm:flex-row justify-between gap-3 text-xs font-mono text-dim uppercase tracking-wider">
@@ -1395,7 +1459,6 @@
     words.forEach((w, i) => {
       setTimeout(() => w.classList.add('show'), 200 + i * 150);
     });
-    // reveal the squiggle after words land
     setTimeout(() => {
       const sq = document.getElementById('hero-squiggle');
       if (sq) sq.style.opacity = '1';
@@ -1406,7 +1469,6 @@
   (function() {
     const el = document.getElementById('countdown');
     if (!el) return;
-    // next event: today at 9pm IST, or tomorrow if past
     function nextEvent() {
       const now = new Date();
       const target = new Date(now);
@@ -1528,31 +1590,26 @@
 
   // ============ WAITLIST FORM → Google Sheets via hidden-iframe submit ============
   (function() {
-    // ⬇️ Apps Script Web App URL ⬇️
     const WAITLIST_ENDPOINT = 'https://script.google.com/macros/s/AKfycbyWL_pyQV0mL20FlFDxIBhcVwwX2AdTszO1M_nbK2hXVCQ8OHFgbFV0AvAYBD-koBp5/exec';
 
     const form = document.getElementById('waitlist-form');
     const success = document.getElementById('waitlist-success');
     if (!form) return;
 
-    // set form action from the constant (form submits naturally to hidden iframe)
     form.setAttribute('action', WAITLIST_ENDPOINT);
 
     form.addEventListener('submit', (e) => {
-      // ⚠️ do NOT preventDefault — let the browser submit the form to the iframe
       const btn = form.querySelector('button[type="submit"]');
-      btn.textContent = 'joining...';
+      btn.textContent = 'requesting...';
       btn.disabled = true;
       btn.style.opacity = '0.7';
 
-      // give the form time to actually submit, then show success
       setTimeout(() => {
         const r = form.getBoundingClientRect();
         const cx = r.left + r.width / 2;
         const cy = r.top + r.height / 2;
         form.classList.add('hidden');
         success.classList.remove('hidden');
-        // heart burst
         const emojis = ['♡', '✦', '✿', '★'];
         const colors = ['#FF7A66', '#FF8FB5', '#FFD56B', '#9FD9B5'];
         for (let i = 0; i < 14; i++) {
