@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TuneD — the internet feels good here. finally.</title>
-<meta name="description" content="A private social community for people who miss late-night conversations with strangers, anonymous game nights, and the right corners of the internet. Friendship-first. Dating optional.">
+<meta name="description" content="A private online social community for people who miss late-night conversations with strangers, anonymous game nights, and the right corners of the internet. Friendship-first. Dating optional.">
 <meta property="og:title" content="TuneD — the internet feels good here. finally.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -810,7 +810,7 @@
         </div>
       </div>
 
-      <!-- 3. MIDNIGHT DROPS (was: blindfold drops) — mystery card with dashed border -->
+      <!-- 3. MIDNIGHT DROPS — mystery card with dashed border -->
       <div class="col-span-12 sm:col-span-12 lg:col-span-3 relative" style="transform:rotate(-1deg);">
         <div class="h-full rounded-2xl p-5 flex flex-col justify-between" style="background:linear-gradient(160deg,#3D2A4F 0%,#1A0E2E 100%);border:2px dashed rgba(255,143,181,0.45);min-height:240px;">
           <div>
@@ -936,7 +936,7 @@
 
     <p class="text-xs font-mono text-dim text-center mb-16">↑ plus movie nights, meme wars, music listening parties, karaoke rooms, geoguessr championships, two-line story circles, anonymous compliment chains, "show your room (no face)" nights, letter to your future self, co-working rooms...</p>
 
-    <!-- FEATURED MYSTERY CONVERSATION CARD (formerly "blind date nights") -->
+    <!-- FEATURED MYSTERY CONVERSATION CARD -->
     <div class="reveal rounded-3xl p-8 md:p-10 relative overflow-hidden mb-16" style="background: linear-gradient(135deg, rgba(255,143,181,0.15), rgba(200,168,233,0.1), rgba(255,176,136,0.12)); border: 1px solid rgba(255,143,181,0.4);">
       <div class="orb orb-pink" style="width:300px;height:300px;top:-80px;right:-80px;opacity:0.25;"></div>
 
@@ -1130,7 +1130,7 @@
       pick your <em class="grad-warm">stay.</em>
     </h2>
 
-    <!-- "what membership gets you" block — frames the purchase as community access, not dating access -->
+    <!-- "what membership gets you" block -->
     <div class="reveal mt-10 p-6 rounded-2xl" style="background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.08);">
       <div class="font-mono text-[10px] uppercase tracking-widest mb-4" style="color:#FFB088;">community membership includes</div>
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -1378,7 +1378,7 @@
         <span class="text-lg font-medium">can i get a refund?</span>
         <span class="faq-plus text-2xl font-light" style="color:#FFB088">+</span>
       </summary>
-      <p class="mt-4 text-mute leading-relaxed">no — all membership payments are final. we keep things affordable (₹99 ≈ a momos plate) because we don't want refund overhead. try the free 7-day pass first if you're unsure, or start with the ₹99 weekly. that's literally why those tiers exist.</p>
+      <p class="mt-4 text-mute leading-relaxed">most membership payments are final, but there are a few specific cases where we will refund — if access never arrives, duplicate payments, or material service changes. see the <a href="refunds.html" class="underline" style="color:#FF8FB5;">refunds page</a> for the full list. try the free 7-day pass first if you're unsure, or start with the ₹99 weekly.</p>
     </details>
 
     <details class="glass rounded-2xl p-6 group">
@@ -1415,24 +1415,36 @@
 
 <!-- ============ FOOTER ============ -->
 <footer class="relative z-10 px-6 lg:px-10 py-12 border-t border-line">
-  <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-start gap-8">
-    <div>
-      <div class="flex items-center gap-2.5 mb-3">
-        <svg viewBox="0 0 36 36" class="w-7 h-7">
-          <circle cx="18" cy="18" r="17" fill="#0E0817" stroke="#FF7A66" stroke-width="1.5"/>
-          <g class="spin-slow" style="transform-origin: 18px 18px;">
-            <circle cx="18" cy="18" r="5" fill="#FF7A66"/>
-            <circle cx="18" cy="18" r="1.5" fill="#0E0817"/>
-          </g>
-        </svg>
-        <span class="display text-2xl">tune<em class="italic" style="color:#FF8FB5">d</em></span>
+  <div class="max-w-6xl mx-auto">
+    <div class="flex flex-col md:flex-row justify-between items-start gap-8">
+      <div class="max-w-sm">
+        <div class="flex items-center gap-2.5 mb-3">
+          <svg viewBox="0 0 36 36" class="w-7 h-7">
+            <circle cx="18" cy="18" r="17" fill="#0E0817" stroke="#FF7A66" stroke-width="1.5"/>
+            <g class="spin-slow" style="transform-origin: 18px 18px;">
+              <circle cx="18" cy="18" r="5" fill="#FF7A66"/>
+              <circle cx="18" cy="18" r="1.5" fill="#0E0817"/>
+            </g>
+          </svg>
+          <span class="display text-2xl">tune<em class="italic" style="color:#FF8FB5">d</em></span>
+        </div>
+        <p class="text-mute text-sm">a private online social community for indian gen z.<br>built by two friends. still in beta. say hi.</p>
       </div>
-      <p class="text-mute text-sm max-w-sm">a small private community for indian gen z.<br>built by two friends. still in beta. say hi.</p>
+      <div class="flex flex-col gap-3">
+        <div class="font-mono text-[10px] uppercase tracking-widest text-dim">fine print</div>
+        <div class="flex flex-wrap gap-x-5 gap-y-2 text-sm text-mute">
+          <a href="privacy.html" class="hover:text-ink transition">privacy</a>
+          <a href="terms.html" class="hover:text-ink transition">terms</a>
+          <a href="refunds.html" class="hover:text-ink transition">refunds</a>
+          <a href="delivery.html" class="hover:text-ink transition">digital access</a>
+          <a href="contact.html" class="hover:text-ink transition">contact</a>
+        </div>
+      </div>
     </div>
-  </div>
-  <div class="max-w-6xl mx-auto mt-10 pt-6 border-t border-line flex flex-col sm:flex-row justify-between gap-3 text-xs font-mono text-dim uppercase tracking-wider">
-    <div>© 2026 tuned · built in india with ♡</div>
-    <div>v1 · pre-launch</div>
+    <div class="mt-10 pt-6 border-t border-line flex flex-col sm:flex-row justify-between gap-3 text-xs font-mono text-dim uppercase tracking-wider">
+      <div>© 2026 tuned · built in india with ♡</div>
+      <div>v1 · pre-launch</div>
+    </div>
   </div>
 </footer>
 
@@ -1463,31 +1475,6 @@
       const sq = document.getElementById('hero-squiggle');
       if (sq) sq.style.opacity = '1';
     }, 200 + words.length * 150 + 400);
-  })();
-
-  // ============ LIVE COUNTDOWN TIMER (to next event) ============
-  (function() {
-    const el = document.getElementById('countdown');
-    if (!el) return;
-    function nextEvent() {
-      const now = new Date();
-      const target = new Date(now);
-      target.setHours(21, 0, 0, 0);
-      if (target <= now) target.setDate(target.getDate() + 1);
-      return target;
-    }
-    let target = nextEvent();
-    function tick() {
-      const now = new Date();
-      let diff = Math.max(0, target - now);
-      if (diff === 0) { target = nextEvent(); diff = target - now; }
-      const h = Math.floor(diff / 3.6e6);
-      const m = Math.floor((diff % 3.6e6) / 6e4);
-      const s = Math.floor((diff % 6e4) / 1000);
-      el.textContent = `${String(h).padStart(2,'0')}h ${String(m).padStart(2,'0')}m ${String(s).padStart(2,'0')}s`;
-    }
-    tick();
-    setInterval(tick, 1000);
   })();
 
   // ============ 3D CARD TILT on hover (desktop) ============
