@@ -1,0 +1,1608 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TuneD — the internet feels good here. finally.</title>
+<meta name="description" content="A private online social community for people who miss late-night conversations with strangers, anonymous game nights, and the right corners of the internet. Friendship-first. Community only.">
+<meta property="og:title" content="TuneD — the internet feels good here. finally.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..900,0..100,0..1;1,9..144,300..900,0..100,0..1&family=DM+Sans:opsz,wght@9..40,300..800&family=Caveat:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          display: ['Fraunces', 'serif'],
+          body: ['"DM Sans"', 'sans-serif'],
+          hand: ['Caveat', 'cursive'],
+          mono: ['"JetBrains Mono"', 'monospace'],
+        },
+        colors: {
+          base: '#0E0817',
+          surface: '#181025',
+          elevated: '#221731',
+          line: 'rgba(255,255,255,0.07)',
+          line2: 'rgba(255,255,255,0.14)',
+          ink: '#FAF0E6',
+          warm: '#F2E8D5',
+          mute: '#A89A8D',
+          dim: '#6E6378',
+          coral: '#FF7A66',
+          peach: '#FFB088',
+          pink: '#FF8FB5',
+          rose: '#FB7185',
+          mint: '#9FD9B5',
+          mintDark: '#5BAE7E',
+          sun: '#FFD56B',
+          lilac: '#C8A8E9',
+          plum: '#9276B8',
+          sky: '#9BC5E3',
+        },
+      },
+    },
+  };
+</script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: #0F0814;
+    color: #FAF0E6;
+    font-family: 'DM Sans', system-ui, sans-serif;
+    overflow-x: hidden;
+    position: relative;
+    letter-spacing: -0.01em;
+  }
+
+  /* Fraunces with WONK = personality */
+  .display {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    font-variation-settings: "opsz" 144, "SOFT" 100, "WONK" 1;
+  }
+  .display em, .display .ital {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 700;
+    display: inline-block;
+    padding-bottom: 0.08em;
+    line-height: 1;
+    font-variation-settings: "opsz" 144, "SOFT" 100, "WONK" 1;
+  }
+  .hand { font-family: 'Caveat', cursive; font-weight: 600; }
+
+  /* warm noise overlay */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.05;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/></svg>");
+    mix-blend-mode: overlay;
+  }
+
+  /* ambient orbs - warm not techy */
+  .orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+    opacity: 0.4;
+  }
+  .orb-coral { background: #FF7A66; }
+  .orb-sun { background: #FFD56B; }
+  .orb-pink { background: #FF8FB5; }
+  .orb-plum { background: #9276B8; }
+  .orb-mint { background: #5BAE7E; }
+
+  @keyframes drift-a {
+    0%, 100% { transform: translate(0,0) scale(1); }
+    33% { transform: translate(60px, -40px) scale(1.08); }
+    66% { transform: translate(-40px, 50px) scale(0.92); }
+  }
+  @keyframes drift-b {
+    0%, 100% { transform: translate(0,0) scale(1); }
+    33% { transform: translate(-50px, 60px) scale(1.12); }
+    66% { transform: translate(40px, -30px) scale(0.88); }
+  }
+  .orb-1 { animation: drift-a 22s ease-in-out infinite; }
+  .orb-2 { animation: drift-b 28s ease-in-out infinite; }
+  .orb-3 { animation: drift-a 30s ease-in-out infinite; }
+
+  /* spinning record */
+  @keyframes spin { from { transform: rotate(0); } to { transform: rotate(360deg); } }
+  .spin-slow { animation: spin 8s linear infinite; transform-origin: center; }
+
+  /* steam rising */
+  @keyframes steam {
+    0% { transform: translateY(0) scaleX(1); opacity: 0; }
+    30% { opacity: 0.5; }
+    100% { transform: translateY(-30px) scaleX(0.6); opacity: 0; }
+  }
+  .steam-1 { animation: steam 3s ease-in-out infinite; transform-origin: bottom; }
+  .steam-2 { animation: steam 3s ease-in-out infinite 1s; transform-origin: bottom; }
+  .steam-3 { animation: steam 3s ease-in-out infinite 2s; transform-origin: bottom; }
+
+  /* twinkling stars */
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.3; transform: scale(0.85); }
+    50% { opacity: 1; transform: scale(1.1); }
+  }
+  .twinkle-1 { animation: twinkle 2.5s ease-in-out infinite; }
+  .twinkle-2 { animation: twinkle 3s ease-in-out infinite 0.7s; }
+  .twinkle-3 { animation: twinkle 2.2s ease-in-out infinite 1.4s; }
+
+  /* floating music notes */
+  @keyframes float-up {
+    0% { transform: translate(0, 0) rotate(-5deg); opacity: 0; }
+    20% { opacity: 0.8; }
+    100% { transform: translate(20px, -80px) rotate(10deg); opacity: 0; }
+  }
+  .float-up-1 { animation: float-up 4s ease-out infinite; }
+  .float-up-2 { animation: float-up 4s ease-out infinite 1.3s; }
+  .float-up-3 { animation: float-up 4s ease-out infinite 2.6s; }
+
+  /* lamp glow pulse */
+  @keyframes glow {
+    0%, 100% { opacity: 0.6; filter: blur(20px); }
+    50% { opacity: 0.9; filter: blur(28px); }
+  }
+  .lamp-glow { animation: glow 4s ease-in-out infinite; }
+
+  /* scroll reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .reveal.in-view { opacity: 1; transform: translateY(0); }
+
+  .reveal-children > * {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1), transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .reveal-children.in-view > * { opacity: 1; transform: translateY(0); }
+  .reveal-children.in-view > *:nth-child(1) { transition-delay: 0.00s; }
+  .reveal-children.in-view > *:nth-child(2) { transition-delay: 0.07s; }
+  .reveal-children.in-view > *:nth-child(3) { transition-delay: 0.14s; }
+  .reveal-children.in-view > *:nth-child(4) { transition-delay: 0.21s; }
+  .reveal-children.in-view > *:nth-child(5) { transition-delay: 0.28s; }
+  .reveal-children.in-view > *:nth-child(6) { transition-delay: 0.35s; }
+  .reveal-children.in-view > *:nth-child(7) { transition-delay: 0.42s; }
+  .reveal-children.in-view > *:nth-child(n+8) { transition-delay: 0.49s; }
+
+  /* word-by-word hero reveal */
+  .word-reveal { display: inline-block; opacity: 0; transform: translateY(20px); transition: opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1); }
+  .word-reveal.show { opacity: 1; transform: translateY(0); }
+
+  /* warm gradient text */
+  @keyframes grad-shift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+  .grad-warm {
+    background: linear-gradient(90deg, #FF7A66 0%, #FFB088 25%, #FF8FB5 50%, #FFD56B 75%, #FF7A66 100%);
+    background-size: 250% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: grad-shift 7s ease-in-out infinite;
+  }
+  .grad-cool {
+    background: linear-gradient(90deg, #9FD9B5 0%, #C8A8E9 50%, #FF8FB5 100%);
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: grad-shift 8s ease-in-out infinite;
+  }
+
+  /* cursor spotlight */
+  .spotlight {
+    position: fixed;
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,176,136,0.08), rgba(255,143,181,0.04) 30%, transparent 60%);
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    z-index: 0;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    filter: blur(20px);
+    mix-blend-mode: screen;
+  }
+
+  /* primary button - warm coral gradient + magnetic */
+  .btn-primary {
+    background: linear-gradient(135deg, #FF7A66 0%, #FF8FB5 100%);
+    color: #0E0817;
+    transition: transform 0.3s cubic-bezier(0.16,1,0.3,1), box-shadow 0.3s ease;
+    box-shadow: 0 1px 0 rgba(255,255,255,0.2) inset, 0 8px 30px -8px rgba(255,122,102,0.5);
+    font-weight: 700;
+    will-change: transform;
+  }
+  .btn-primary:hover {
+    box-shadow: 0 1px 0 rgba(255,255,255,0.3) inset, 0 16px 40px -8px rgba(255,122,102,0.7);
+  }
+  .btn-ghost {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.14);
+    color: #FAF0E6;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    backdrop-filter: blur(8px);
+  }
+  .btn-ghost:hover {
+    background: rgba(255,255,255,0.07);
+    border-color: rgba(255,176,136,0.4);
+  }
+
+  /* warm glass card */
+  .glass {
+    background: rgba(255,255,255,0.025);
+    border: 1px solid rgba(255,255,255,0.08);
+    backdrop-filter: blur(10px);
+    transition: transform 0.4s cubic-bezier(0.16,1,0.3,1), background 0.3s ease, border-color 0.3s ease, box-shadow 0.4s ease;
+  }
+  .glass:hover {
+    background: rgba(255,255,255,0.04);
+    border-color: rgba(255,176,136,0.3);
+    transform: translateY(-3px);
+    box-shadow: 0 24px 40px -20px rgba(255,122,102,0.25);
+  }
+
+  /* faq */
+  details summary { list-style: none; cursor: pointer; }
+  details summary::-webkit-details-marker { display: none; }
+  details[open] .faq-plus { transform: rotate(45deg); }
+  .faq-plus { transition: transform 0.25s; }
+
+  /* ticker */
+  @keyframes ticker {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  .ticker { animation: ticker 60s linear infinite; }
+
+  /* status pulse */
+  @keyframes pulse-soft {
+    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(91,174,126,0.7); }
+    50% { opacity: 1; box-shadow: 0 0 0 6px rgba(91,174,126,0); }
+  }
+  .pulse-dot { animation: pulse-soft 2s ease-in-out infinite; }
+
+  /* avatar */
+  .avatar {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--c1, #FF7A66), var(--c2, #FF8FB5));
+    display: flex; align-items: center; justify-content: center;
+    color: white; font-weight: 600; font-size: 14px; flex-shrink: 0; position: relative;
+  }
+  .avatar.online::after {
+    content: ""; position: absolute; bottom: -2px; right: -2px;
+    width: 12px; height: 12px; background: #5BAE7E;
+    border: 2px solid #181025; border-radius: 50%;
+  }
+
+  /* schedule row */
+  .schedule-row {
+    display: grid;
+    grid-template-columns: 70px 90px 1fr auto;
+    gap: 16px;
+    align-items: center;
+    padding: 14px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    transition: background 0.2s;
+  }
+  .schedule-row:hover { background: rgba(255,255,255,0.025); }
+  .schedule-row:last-child { border-bottom: none; }
+
+  /* pricing featured */
+  .price-featured {
+    background: linear-gradient(180deg, rgba(255,122,102,0.08) 0%, rgba(255,143,181,0.04) 100%);
+    border: 1px solid rgba(255,143,181,0.45);
+    box-shadow: 0 0 40px -10px rgba(255,122,102,0.35), 0 1px 0 rgba(255,255,255,0.06) inset;
+  }
+
+  /* founding seats progress bar */
+  .seat-bar {
+    background: rgba(255,255,255,0.06);
+    border-radius: 999px;
+    height: 6px;
+    overflow: hidden;
+    position: relative;
+  }
+  .seat-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #FF7A66, #FF8FB5, #FFD56B);
+    border-radius: 999px;
+    position: relative;
+    overflow: hidden;
+  }
+  .seat-bar-fill::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.45), transparent);
+    animation: seat-shimmer 2.6s ease-in-out infinite;
+  }
+  @keyframes seat-shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(200%); }
+  }
+
+  input:focus, button:focus, a:focus { outline: 2px solid rgba(255,176,136,0.5); outline-offset: 2px; }
+
+  /* discord-style channel pill (for nested mockups) */
+  .channel-pill {
+    display: flex; align-items: center; gap: 10px;
+    padding: 6px 10px; border-radius: 6px;
+    color: #A89A8D; font-size: 13px;
+    transition: all 0.2s ease;
+  }
+  .channel-pill:hover { background: rgba(255,255,255,0.04); color: #FAF0E6; }
+  .channel-pill.active { background: rgba(255,122,102,0.15); color: #FAF0E6; }
+
+  /* responsive */
+  @media (max-width: 768px) {
+    .mobile-hide { display: none; }
+    .schedule-row { grid-template-columns: 50px 1fr; }
+    .schedule-row > *:nth-child(2), .schedule-row > *:nth-child(4) { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    .reveal, .reveal-children > *, .word-reveal { opacity: 1 !important; transform: none !important; }
+  }
+
+  .dot-divider { display: none; }
+</style>
+</head>
+<body class="font-body antialiased">
+
+<!-- ============ NAV ============ -->
+<nav class="relative z-30 px-6 lg:px-10 py-5 flex items-center justify-between border-b border-line backdrop-blur-sm" style="background: rgba(14,8,23,0.75);">
+  <a href="#" class="flex items-center gap-2.5">
+    <div class="relative w-9 h-9">
+      <svg viewBox="0 0 36 36" class="w-9 h-9">
+        <circle cx="18" cy="18" r="17" fill="#0E0817" stroke="#FF7A66" stroke-width="1.5"/>
+        <g class="spin-slow" style="transform-origin: 18px 18px;">
+          <circle cx="18" cy="18" r="14" fill="none" stroke="rgba(250,240,230,0.15)" stroke-width="0.4"/>
+          <circle cx="18" cy="18" r="11" fill="none" stroke="rgba(250,240,230,0.12)" stroke-width="0.4"/>
+          <circle cx="18" cy="18" r="8" fill="none" stroke="rgba(250,240,230,0.1)" stroke-width="0.4"/>
+          <circle cx="18" cy="18" r="5" fill="#FF7A66"/>
+          <circle cx="18" cy="18" r="1.5" fill="#0E0817"/>
+        </g>
+      </svg>
+    </div>
+    <span class="font-display text-2xl">tune<em class="italic" style="color:#FF8FB5">d</em></span>
+  </a>
+  <div class="hidden md:flex items-center gap-7 text-sm text-mute">
+    <a href="#why" class="hover:text-ink transition">why</a>
+    <a href="#nights" class="hover:text-ink transition">what we do</a>
+    <a href="#pricing" class="hover:text-ink transition">membership</a>
+    <a href="#faq" class="hover:text-ink transition">faq</a>
+  </div>
+  <a href="#pricing" class="btn-primary text-sm px-5 py-2 rounded-full">come in →</a>
+</nav>
+
+<!-- ============ HERO ============ -->
+<section class="relative px-6 lg:px-10 pt-16 lg:pt-24 pb-32 overflow-hidden">
+  <div class="orb orb-coral orb-1" style="width:550px;height:550px;top:-220px;left:-200px;"></div>
+  <div class="orb orb-pink orb-2" style="width:500px;height:500px;top:100px;right:-180px;opacity:0.3;"></div>
+  <div class="orb orb-sun orb-3" style="width:300px;height:300px;bottom:0;left:35%;opacity:0.15;"></div>
+
+  <!-- scattered decorative SVGs floating -->
+  <svg class="absolute pointer-events-none twinkle-1 mobile-hide" style="top:120px;left:48%;" width="14" height="14" viewBox="0 0 14 14" fill="#FFD56B"><path d="M7 0l1.5 5.5L14 7l-5.5 1.5L7 14l-1.5-5.5L0 7l5.5-1.5z"/></svg>
+  <svg class="absolute pointer-events-none twinkle-2 mobile-hide" style="top:280px;left:6%;" width="12" height="12" viewBox="0 0 14 14" fill="#FF8FB5"><path d="M7 0l1.5 5.5L14 7l-5.5 1.5L7 14l-1.5-5.5L0 7l5.5-1.5z"/></svg>
+  <svg class="absolute pointer-events-none twinkle-3 mobile-hide" style="top:450px;left:52%;" width="10" height="10" viewBox="0 0 14 14" fill="#9FD9B5"><path d="M7 0l1.5 5.5L14 7l-5.5 1.5L7 14l-1.5-5.5L0 7l5.5-1.5z"/></svg>
+
+  <div class="relative z-10 max-w-7xl mx-auto grid lg:grid-cols-[1.2fr_1fr] gap-14 items-center">
+    <!-- left: copy with asymmetric type composition -->
+    <div class="relative">
+      <!-- chaotic asymmetric headline -->
+      <div class="relative">
+        <h1 class="display leading-[0.95] tracking-tight">
+          <span class="block text-6xl sm:text-7xl lg:text-[6.5rem] xl:text-[7.5rem] word-reveal">the internet</span>
+          <span class="block text-6xl sm:text-7xl lg:text-[6.5rem] xl:text-[7.5rem] mt-2">
+            <span class="word-reveal" style="display:inline-block">feels</span>
+            <span class="word-reveal hand" style="font-size: 1.5em; color: #FF8FB5; display:inline-block; vertical-align: middle; transform: translateY(-12px) rotate(-3deg); padding: 0 0.15em;">good</span>
+          </span>
+          <span class="block text-6xl sm:text-7xl lg:text-[6.5rem] xl:text-[7.5rem] mt-2 word-reveal">here.</span>
+        </h1>
+
+        <!-- hand-drawn arrow underline pointing at "good" -->
+        <svg class="absolute" style="top:38%;left:18%;width:160px;height:30px;opacity:0;transition:opacity 0.8s 1.6s;" id="hero-squiggle" viewBox="0 0 160 30" fill="none">
+          <path d="M5 22 Q 30 8, 60 18 T 120 14 Q 140 12, 152 8" stroke="#FFD56B" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M152 8 L 144 14 M 152 8 L 148 16" stroke="#FFD56B" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+
+        <!-- "finally" handwritten margin note -->
+        <span class="word-reveal hand absolute" style="font-size: 3.5rem; color: #A89A8D; transform: rotate(-4deg); right: 8%; bottom: -55px; line-height:1;">finally.</span>
+      </div>
+
+      <p class="reveal mt-16 max-w-xl text-lg text-mute leading-relaxed">
+        a private little community where strangers share <strong class="text-ink">hidden stories at 2am</strong>, play <strong class="text-ink">scribbl till 1am</strong>, become <strong class="text-ink">anonymous pen pals for 48 hours</strong>, give each other the advice they wish they'd gotten — and slowly turn into each other's favorite people to talk to.
+      </p>
+
+      <div class="reveal mt-10 flex flex-col sm:flex-row items-start gap-3 relative">
+        <a href="#pricing" class="btn-primary px-7 py-3.5 rounded-full text-base relative" data-magnetic>
+          come in for ₹99 →
+        </a>
+        <a href="#waitlist" class="btn-ghost px-7 py-3.5 rounded-full text-base">
+          request a free 7-day pass
+        </a>
+        <!-- handwritten arrow pointing to primary CTA -->
+        <div class="hand absolute mobile-hide" style="top: -45px; left: 20px; font-size: 1.6rem; color: #FF8FB5; transform: rotate(-6deg);">
+          start here →
+        </div>
+      </div>
+
+      <!-- friendship-first tagline (compliance + soul) -->
+      <p class="reveal mt-5 text-sm font-mono uppercase tracking-widest text-dim">
+        friendship-first.&nbsp; community only.&nbsp; <span style="color:#FFB088">membership required.</span>
+      </p>
+
+      <div class="reveal mt-10 flex items-center gap-4">
+        <span class="hand text-2xl text-coral" style="transform: rotate(-1deg); display:inline-block;">no algorithm.</span>
+        <span class="hand text-2xl text-peach" style="transform: rotate(2deg); display:inline-block;">no performance.</span>
+        <span class="hand text-2xl text-pink" style="transform: rotate(-2deg); display:inline-block;">no pressure.</span>
+      </div>
+    </div>
+
+    <!-- right: ILLUSTRATED SCENE — a tiny room at 2am -->
+    <div class="reveal mobile-hide relative">
+      <div class="relative w-full" style="aspect-ratio: 1/1.05; max-width: 500px; margin: 0 auto;">
+
+        <!-- night sky background panel (the window) -->
+        <div class="absolute inset-0 rounded-[36px] overflow-hidden" style="background: linear-gradient(180deg, #1A0F2E 0%, #2A1A3D 50%, #1F1230 100%); border: 1px solid rgba(255,255,255,0.06);">
+
+          <!-- stars in the window -->
+          <svg class="absolute twinkle-1" style="top:18%;left:20%;" width="8" height="8" viewBox="0 0 14 14" fill="#FAF0E6"><path d="M7 0l1.5 5.5L14 7l-5.5 1.5L7 14l-1.5-5.5L0 7l5.5-1.5z"/></svg>
+          <svg class="absolute twinkle-2" style="top:12%;left:65%;" width="10" height="10" viewBox="0 0 14 14" fill="#FFD56B"><path d="M7 0l1.5 5.5L14 7l-5.5 1.5L7 14l-1.5-5.5L0 7l5.5-1.5z"/></svg>
+          <svg class="absolute twinkle-3" style="top:8%;left:40%;" width="6" height="6" viewBox="0 0 14 14" fill="#FAF0E6"><path d="M7 0l1.5 5.5L14 7l-5.5 1.5L7 14l-1.5-5.5L0 7l5.5-1.5z"/></svg>
+          <svg class="absolute twinkle-1" style="top:25%;left:78%;" width="7" height="7" viewBox="0 0 14 14" fill="#FAF0E6"><path d="M7 0l1.5 5.5L14 7l-5.5 1.5L7 14l-1.5-5.5L0 7l5.5-1.5z"/></svg>
+          <svg class="absolute twinkle-2" style="top:34%;left:10%;" width="9" height="9" viewBox="0 0 14 14" fill="#FF8FB5"><path d="M7 0l1.5 5.5L14 7l-5.5 1.5L7 14l-1.5-5.5L0 7l5.5-1.5z"/></svg>
+          <svg class="absolute twinkle-3" style="top:5%;left:84%;" width="6" height="6" viewBox="0 0 14 14" fill="#C8A8E9"><path d="M7 0l1.5 5.5L14 7l-5.5 1.5L7 14l-1.5-5.5L0 7l5.5-1.5z"/></svg>
+
+          <!-- crescent moon -->
+          <svg class="absolute" style="top:8%;right:14%;" width="68" height="68" viewBox="0 0 68 68">
+            <defs>
+              <radialGradient id="moonGlow">
+                <stop offset="0%" stop-color="#FFD56B" stop-opacity="0.45"/>
+                <stop offset="100%" stop-color="#FFD56B" stop-opacity="0"/>
+              </radialGradient>
+            </defs>
+            <circle cx="34" cy="34" r="34" fill="url(#moonGlow)"/>
+            <path d="M 24 14 A 20 20 0 1 0 24 54 A 14 14 0 1 1 24 14 Z" fill="#FFD56B"/>
+          </svg>
+
+          <!-- floating music notes -->
+          <svg class="absolute float-up-1" style="bottom:28%;left:18%;" width="20" height="24" viewBox="0 0 20 24" fill="#FF8FB5"><path d="M18 0v14a4 4 0 1 1-2-3.46V4l-9 2v12a4 4 0 1 1-2-3.46V3l13-3z"/></svg>
+          <svg class="absolute float-up-2" style="bottom:28%;left:32%;" width="16" height="20" viewBox="0 0 20 24" fill="#FFD56B"><path d="M18 0v14a4 4 0 1 1-2-3.46V4l-9 2v12a4 4 0 1 1-2-3.46V3l13-3z"/></svg>
+          <svg class="absolute float-up-3" style="bottom:30%;left:24%;" width="14" height="17" viewBox="0 0 20 24" fill="#9FD9B5"><path d="M18 0v14a4 4 0 1 1-2-3.46V4l-9 2v12a4 4 0 1 1-2-3.46V3l13-3z"/></svg>
+
+          <!-- table surface -->
+          <div class="absolute left-0 right-0 bottom-0" style="height:32%; background: linear-gradient(180deg, transparent 0%, rgba(255,176,136,0.08) 30%, rgba(255,122,102,0.12) 100%);"></div>
+
+          <!-- lamp glow on left -->
+          <div class="absolute lamp-glow" style="top:42%;left:6%;width:120px;height:120px;background:radial-gradient(circle, rgba(255,213,107,0.5), rgba(255,176,136,0.2) 50%, transparent 70%); border-radius:50%;"></div>
+
+          <!-- LAMP -->
+          <svg class="absolute" style="top:38%;left:4%;" width="62" height="92" viewBox="0 0 62 92">
+            <path d="M 10 0 L 52 0 L 46 24 L 16 24 Z" fill="#FFB088" stroke="#FF7A66" stroke-width="1"/>
+            <circle cx="31" cy="24" r="3" fill="#FFD56B"/>
+            <line x1="31" y1="24" x2="31" y2="80" stroke="#A89A8D" stroke-width="2"/>
+            <ellipse cx="31" cy="84" rx="16" ry="3" fill="#221731"/>
+            <path d="M 19 80 L 43 80 L 41 88 L 21 88 Z" fill="#3D2A4F" stroke="#5A3F73" stroke-width="0.5"/>
+          </svg>
+
+          <!-- TURNTABLE / RECORD PLAYER (center) -->
+          <div class="absolute" style="bottom:6%;left:50%;transform:translateX(-50%);width:280px;height:200px;">
+            <div class="absolute inset-x-0 bottom-0" style="height:88%;background:linear-gradient(180deg,#3D2A4F,#2A1A3D);border-radius:18px;border:1px solid rgba(255,255,255,0.1);box-shadow:0 12px 24px -12px rgba(0,0,0,0.5);"></div>
+
+            <div class="absolute" style="top:14%;left:50%;transform:translateX(-50%);width:160px;height:160px;">
+              <svg viewBox="0 0 160 160" class="spin-slow" style="transform-origin:80px 80px;">
+                <circle cx="80" cy="80" r="76" fill="#0E0817"/>
+                <circle cx="80" cy="80" r="76" fill="none" stroke="rgba(250,240,230,0.06)" stroke-width="0.5"/>
+                <circle cx="80" cy="80" r="64" fill="none" stroke="rgba(250,240,230,0.08)" stroke-width="0.5"/>
+                <circle cx="80" cy="80" r="52" fill="none" stroke="rgba(250,240,230,0.06)" stroke-width="0.5"/>
+                <circle cx="80" cy="80" r="40" fill="none" stroke="rgba(250,240,230,0.05)" stroke-width="0.5"/>
+                <circle cx="80" cy="80" r="28" fill="#FF7A66"/>
+                <text x="80" y="74" font-family="DM Serif Display" font-size="11" fill="#0E0817" text-anchor="middle" font-style="italic">tuned</text>
+                <text x="80" y="88" font-family="JetBrains Mono" font-size="6" fill="#0E0817" text-anchor="middle">vol.01 · india</text>
+                <circle cx="80" cy="80" r="2" fill="#0E0817"/>
+              </svg>
+            </div>
+
+            <svg class="absolute" style="top:0;right:0;width:110px;height:120px;" viewBox="0 0 110 120">
+              <circle cx="92" cy="14" r="10" fill="#221731" stroke="#5A3F73" stroke-width="1"/>
+              <line x1="92" y1="14" x2="48" y2="78" stroke="#A89A8D" stroke-width="3" stroke-linecap="round"/>
+              <circle cx="48" cy="78" r="5" fill="#FF7A66"/>
+            </svg>
+          </div>
+
+          <!-- two CHAI CUPS on right side -->
+          <div class="absolute" style="bottom:14%;right:8%;width:120px;height:130px;">
+            <svg class="absolute steam-1" style="top:0;left:20%;" width="6" height="30" viewBox="0 0 6 30"><path d="M3 28 Q 0 20, 3 12 Q 6 4, 3 0" stroke="#FAF0E6" stroke-width="1.5" fill="none" opacity="0.5" stroke-linecap="round"/></svg>
+            <svg class="absolute steam-2" style="top:0;left:55%;" width="6" height="30" viewBox="0 0 6 30"><path d="M3 28 Q 6 20, 3 12 Q 0 4, 3 0" stroke="#FAF0E6" stroke-width="1.5" fill="none" opacity="0.5" stroke-linecap="round"/></svg>
+            <svg class="absolute steam-3" style="top:0;left:80%;" width="6" height="30" viewBox="0 0 6 30"><path d="M3 28 Q 0 20, 3 12 Q 6 4, 3 0" stroke="#FAF0E6" stroke-width="1.5" fill="none" opacity="0.5" stroke-linecap="round"/></svg>
+
+            <svg class="absolute" style="bottom:0;left:0;" width="56" height="60" viewBox="0 0 56 60">
+              <path d="M 6 20 L 50 20 L 46 56 Q 46 60, 42 60 L 14 60 Q 10 60, 10 56 Z" fill="#FAF0E6" stroke="#A89A8D" stroke-width="1"/>
+              <ellipse cx="28" cy="20" rx="22" ry="3.5" fill="#7A4828"/>
+              <path d="M 48 28 Q 56 28, 56 38 Q 56 48, 48 48" fill="none" stroke="#A89A8D" stroke-width="1.5"/>
+            </svg>
+
+            <svg class="absolute" style="bottom:8px;right:0;" width="48" height="52" viewBox="0 0 56 60">
+              <path d="M 6 20 L 50 20 L 46 56 Q 46 60, 42 60 L 14 60 Q 10 60, 10 56 Z" fill="#FFB088" stroke="#FF7A66" stroke-width="1"/>
+              <ellipse cx="28" cy="20" rx="22" ry="3.5" fill="#5A3F73"/>
+              <path d="M 48 28 Q 56 28, 56 38 Q 56 48, 48 48" fill="none" stroke="#FF7A66" stroke-width="1.5"/>
+            </svg>
+          </div>
+
+          <!-- hand-written labels -->
+          <div class="absolute hand text-coral" style="top:42%;right:8%;font-size:20px;transform:rotate(-6deg);">side a</div>
+          <div class="absolute hand" style="bottom:8%;left:6%;font-size:18px;color:#FFD56B;transform:rotate(4deg);">it's late.</div>
+
+          <!-- tiny chat speech bubble floating top-left -->
+          <div class="absolute" style="top:30%;left:18%;transform:rotate(-3deg);">
+            <div class="px-3 py-1.5 rounded-2xl text-xs" style="background:rgba(250,240,230,0.95);color:#0E0817;font-weight:500;">"who's still up?"</div>
+            <svg width="10" height="8" viewBox="0 0 10 8" class="block" style="margin-left:12px;"><path d="M0 0 L 5 8 L 10 0 Z" fill="rgba(250,240,230,0.95)"/></svg>
+          </div>
+        </div>
+
+        <!-- corner caveat note pointing to the scene -->
+        <div class="absolute hand" style="top:-30px;right:-10px;font-size:22px;color:#FF8FB5;transform:rotate(4deg);">
+          this is what<br>2am here<br>feels like →
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TICKER ============ -->
+<div class="relative z-10 py-4 overflow-hidden" style="background: linear-gradient(90deg, rgba(255,122,102,0.06), rgba(255,143,181,0.06), rgba(255,213,107,0.06)); border-top: 1px solid rgba(255,255,255,0.08); border-bottom: 1px solid rgba(255,255,255,0.08);">
+  <div class="ticker flex gap-10 whitespace-nowrap font-display text-2xl">
+    <span class="text-coral">small.</span><span class="text-mute">★</span>
+    <span class="text-ink">slow.</span><span class="text-mute">★</span>
+    <span class="text-peach italic">warm.</span><span class="text-mute">★</span>
+    <span class="text-ink">verified.</span><span class="text-mute">★</span>
+    <span class="text-pink italic">strange in a good way.</span><span class="text-mute">★</span>
+    <span class="text-sun">fun.</span><span class="text-mute">★</span>
+    <span class="text-ink italic">soft.</span><span class="text-mute">★</span>
+    <span class="text-mint">private.</span><span class="text-mute">★</span>
+    <span class="text-coral">small.</span><span class="text-mute">★</span>
+    <span class="text-ink">slow.</span><span class="text-mute">★</span>
+    <span class="text-peach italic">warm.</span><span class="text-mute">★</span>
+    <span class="text-ink">verified.</span><span class="text-mute">★</span>
+    <span class="text-pink italic">strange in a good way.</span><span class="text-mute">★</span>
+    <span class="text-sun">fun.</span><span class="text-mute">★</span>
+    <span class="text-ink italic">soft.</span><span class="text-mute">★</span>
+    <span class="text-mint">private.</span><span class="text-mute">★</span>
+  </div>
+</div>
+
+<!-- ============ WHY ============ -->
+<section id="why" class="relative px-6 lg:px-10 py-28 max-w-6xl mx-auto">
+  <div class="orb orb-plum orb-3" style="width:400px;height:400px;top:0;left:40%;opacity:0.18;"></div>
+
+  <div class="relative z-10">
+    <div class="reveal font-mono text-xs tracking-widest uppercase mb-4" style="color:#FF8FB5">/ 01 — why we made this</div>
+    <h2 class="reveal display text-5xl lg:text-7xl leading-[1.0] max-w-3xl">
+      every app feels <em class="grad-warm">exhausting</em> now.<br>
+      and weirdly, <em class="ital" style="color:#C8A8E9">kinda lonely</em>.
+    </h2>
+
+    <div class="reveal-children mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="glass rounded-2xl p-5">
+        <div class="flex items-center gap-2 mb-4">
+          <div class="w-8 h-8 rounded-full bg-base flex items-center justify-center font-bold" style="color:#C8A8E9">G</div>
+          <span class="font-medium">the group chat</span>
+        </div>
+        <div class="space-y-2 mb-3">
+          <div class="text-xs px-3 py-2 rounded-2xl bg-white/5 inline-block">anyone up?</div>
+          <div class="text-xs text-dim italic">(read by 12 · 0 replies)</div>
+          <div class="text-xs text-dim italic">(silence for 4 days)</div>
+        </div>
+        <p class="text-sm text-mute leading-relaxed mt-3">47 people online. nobody talks. the group chat is its own kind of lonely.</p>
+      </div>
+
+      <div class="glass rounded-2xl p-5">
+        <div class="flex items-center gap-2 mb-4">
+          <div class="w-8 h-8 rounded-full bg-base flex items-center justify-center font-bold" style="color:#FFD56B">?</div>
+          <span class="font-medium">random chat apps</span>
+        </div>
+        <div class="space-y-2 mb-3">
+          <div class="text-xs px-3 py-2 rounded-2xl inline-block" style="background:rgba(255,213,107,0.18);color:#FFD56B">asl?</div>
+          <div class="text-xs text-dim italic">(closes in 8 seconds)</div>
+          <div class="text-xs text-dim italic">(swears off the internet)</div>
+        </div>
+        <p class="text-sm text-mute leading-relaxed mt-3">zero verification. zero moderation. the worst people show up first.</p>
+      </div>
+
+      <div class="glass rounded-2xl p-5">
+        <div class="flex items-center gap-2 mb-4">
+          <div class="w-8 h-8 rounded-full bg-base flex items-center justify-center font-bold" style="color:#FF8FB5">IG</div>
+          <span class="font-medium">instagram</span>
+        </div>
+        <div class="space-y-2 mb-3">
+          <div class="flex items-center gap-2 text-xs text-mute">
+            <span>↑</span><span>3.2k likes</span>
+          </div>
+          <div class="text-xs text-dim italic">"why is everyone's life so good"</div>
+          <div class="text-xs text-dim italic">(closes app feeling worse)</div>
+        </div>
+        <p class="text-sm text-mute leading-relaxed mt-3">comparison-trap. every interaction is public. you scroll and feel smaller.</p>
+      </div>
+
+      <div class="glass rounded-2xl p-5">
+        <div class="flex items-center gap-2 mb-4">
+          <div class="w-8 h-8 rounded-full bg-base flex items-center justify-center font-bold" style="color:#9FD9B5">D</div>
+          <span class="font-medium">random discord</span>
+        </div>
+        <div class="space-y-2 mb-3">
+          <div class="text-xs px-3 py-2 rounded-2xl bg-white/5 inline-block">14,392 members</div>
+          <div class="text-xs text-dim italic">"DM me on snap"</div>
+          <div class="text-xs text-dim italic">(crickets in #general)</div>
+        </div>
+        <p class="text-sm text-mute leading-relaxed mt-3">unverified. unmoderated. the loud people are loud for the wrong reasons.</p>
+      </div>
+    </div>
+
+    <div class="reveal mt-20 max-w-3xl">
+      <p class="display text-3xl lg:text-5xl leading-tight">
+        so we made a <em class="grad-warm">tiny private room</em>.<br>
+        <span class="text-mute italic">that actually feels good to be in.</span>
+      </p>
+      <p class="mt-6 text-lg text-mute leading-relaxed max-w-2xl">
+        verified humans only. one-strike on creep behavior. lurking encouraged. friendship-first, full stop. some people make a couple of close friends, some find a regular game-night crew, some just enjoy good company at 2am. <strong class="text-ink">100 founding seats. ₹99 lets you in for a week.</strong>
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- squiggle divider -->
+<div class="flex justify-center my-2">
+  <svg width="120" height="20" viewBox="0 0 120 20" fill="none"><path d="M2 10 Q 12 2, 22 10 T 42 10 T 62 10 T 82 10 T 102 10 T 118 10" stroke="#FF8FB5" stroke-width="2" stroke-linecap="round" opacity="0.5"/></svg>
+</div>
+
+<!-- ============ FOR YOU ============ -->
+<section class="relative px-6 lg:px-10 py-24 max-w-6xl mx-auto">
+  <svg class="absolute twinkle-1 mobile-hide" style="top:80px;right:8%;" width="20" height="20" viewBox="0 0 14 14" fill="#FFD56B"><path d="M7 0l1.5 5.5L14 7l-5.5 1.5L7 14l-1.5-5.5L0 7l5.5-1.5z"/></svg>
+
+  <div class="reveal font-mono text-xs tracking-widest uppercase mb-4" style="color:#FF8FB5">/ 02 — if this sounds like you</div>
+  <h2 class="reveal display text-5xl lg:text-7xl leading-[1.0] max-w-3xl">
+    you're probably<br>
+    <em class="grad-warm">already one of us.</em>
+  </h2>
+
+  <div class="reveal-children mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+    <div class="glass rounded-2xl p-6">
+      <div class="flex items-center gap-2 mb-4">
+        <div class="avatar" style="--c1:#FF8FB5; --c2:#C8A8E9; width:28px; height:28px; font-size:11px;">S</div>
+        <span class="text-sm text-mute">@shy_one</span>
+      </div>
+      <p class="display text-2xl leading-snug">"i don't talk much in groups."</p>
+      <p class="mt-3 text-sm text-mute leading-relaxed">voice rooms here are mic-off by default. show up and just exist. nobody pings you to speak.</p>
+    </div>
+
+    <div class="glass rounded-2xl p-6">
+      <div class="flex items-center gap-2 mb-4">
+        <div class="avatar" style="--c1:#9FD9B5; --c2:#9BC5E3; width:28px; height:28px; font-size:11px;">T</div>
+        <span class="text-sm text-mute">@slow_texter</span>
+      </div>
+      <p class="display text-2xl leading-snug">"i'd rather text than call."</p>
+      <p class="mt-3 text-sm text-mute leading-relaxed">chats are slow, judgment-free. nobody's waiting for instant replies. take three days. normal here.</p>
+    </div>
+
+    <div class="glass rounded-2xl p-6">
+      <div class="flex items-center gap-2 mb-4">
+        <div class="avatar" style="--c1:#9276B8; --c2:#C8A8E9; width:28px; height:28px; font-size:11px;">I</div>
+        <span class="text-sm text-mute">@deleted_insta</span>
+      </div>
+      <p class="display text-2xl leading-snug">"every scroll makes me feel worse."</p>
+      <p class="mt-3 text-sm text-mute leading-relaxed">no follower counts. no likes. no highlight reels. just channels and people typing slowly.</p>
+    </div>
+
+    <div class="glass rounded-2xl p-6">
+      <div class="flex items-center gap-2 mb-4">
+        <div class="avatar" style="--c1:#FFD56B; --c2:#FF8FB5; width:28px; height:28px; font-size:11px;">F</div>
+        <span class="text-sm text-mute">@want_friends</span>
+      </div>
+      <p class="display text-2xl leading-snug">"making friends after college is hard."</p>
+      <p class="mt-3 text-sm text-mute leading-relaxed">that's literally the brief. game nights. study-together rooms. weekly anthems. low-effort, high-warmth.</p>
+    </div>
+
+    <div class="glass rounded-2xl p-6">
+      <div class="flex items-center gap-2 mb-4">
+        <div class="avatar" style="--c1:#FB7185; --c2:#FF8FB5; width:28px; height:28px; font-size:11px;">Q</div>
+        <span class="text-sm text-mute">@quietly_open</span>
+      </div>
+      <p class="display text-2xl leading-snug">"i want online friends. real ones."</p>
+      <p class="mt-3 text-sm text-mute leading-relaxed">we don't lead with photos. you find people through voice notes, songs they're playing, and how they think. real conversations, no performance.</p>
+    </div>
+
+    <div class="rounded-2xl p-6" style="background: linear-gradient(135deg, rgba(255,143,181,0.18), rgba(200,168,233,0.14)); border: 1px solid rgba(255,143,181,0.35);">
+      <div class="flex items-center gap-2 mb-4">
+        <div class="avatar" style="--c1:#FB7185; --c2:#FFD56B; width:28px; height:28px; font-size:11px;">2</div>
+        <span class="text-sm text-mute">@2am_kid</span>
+      </div>
+      <p class="display text-2xl leading-snug">"i miss talking to strangers at 2am."</p>
+      <p class="mt-3 text-sm text-mute leading-relaxed">the late room opens every saturday 11pm. listen-only voice. that's literally what it's for.</p>
+    </div>
+  </div>
+</section>
+
+<!-- squiggle divider -->
+<div class="flex justify-center my-2">
+  <svg width="120" height="20" viewBox="0 0 120 20" fill="none"><path d="M2 10 Q 12 2, 22 10 T 42 10 T 62 10 T 82 10 T 102 10 T 118 10" stroke="#9FD9B5" stroke-width="2" stroke-linecap="round" opacity="0.5"/></svg>
+</div>
+
+<!-- ============ WHAT WE DO ============ -->
+<section id="nights" class="relative px-6 lg:px-10 py-24 max-w-6xl mx-auto">
+  <div class="orb orb-mint orb-1" style="width:380px;height:380px;top:20%;left:-180px;opacity:0.15;"></div>
+
+  <div class="relative z-10">
+    <div class="reveal font-mono text-xs tracking-widest uppercase mb-4" style="color:#9FD9B5">/ 03 — what we do</div>
+    <h2 class="reveal display text-5xl lg:text-7xl leading-[1.0] max-w-3xl">
+      this is how we<br>
+      <em class="grad-cool">spend our nights.</em>
+    </h2>
+    <p class="reveal text-mute mt-6 mb-12 max-w-xl text-lg">every week looks something like this. show up to any of it. show up to none. just being on the server is allowed.</p>
+
+    <!-- ACTIVITIES — scattered pinboard, each rendered differently -->
+    <div class="reveal-children grid grid-cols-12 gap-5 mb-12 relative">
+
+      <!-- handwritten note pointing into the section -->
+      <div class="hand absolute mobile-hide" style="top:-50px;left:0;font-size:1.6rem;color:#FFD56B;transform:rotate(-3deg);z-index:5;">
+        no two nights look the same →
+      </div>
+
+      <!-- 1. INTRODUCTIONS — polaroid -->
+      <div class="col-span-12 sm:col-span-6 lg:col-span-5 relative" style="transform:rotate(-2deg);">
+        <div class="relative" style="background:#FAF0E6;padding:14px 14px 38px;border-radius:4px;box-shadow:0 24px 50px -20px rgba(0,0,0,0.7);">
+          <div class="absolute -top-3 left-1/2 -translate-x-1/2" style="width:96px;height:22px;background:rgba(255,213,107,0.85);transform:rotate(3deg);"></div>
+          <div style="background:linear-gradient(135deg,#FF7A66 0%,#FFB088 50%,#FF8FB5 100%);aspect-ratio:5/3;display:grid;place-items:center;border-radius:2px;">
+            <span style="font-size:5rem;line-height:1;">👋</span>
+          </div>
+          <div class="hand text-3xl mt-4 ml-1" style="color:#0E0817;line-height:1;">introductions</div>
+          <div class="mt-2 ml-1 flex items-center justify-between">
+            <span class="font-mono text-[10px] uppercase tracking-widest" style="color:#9276B8;">mon · 9pm</span>
+            <span class="hand text-base" style="color:#9276B8;">take your time</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. PLAYING GAMES — arcade tile -->
+      <div class="col-span-12 sm:col-span-6 lg:col-span-4 relative" style="transform:rotate(1.5deg);">
+        <div class="relative h-full p-6 rounded-2xl flex flex-col justify-between overflow-hidden" style="background:radial-gradient(circle at 30% 20%,#FFD56B 0%,#FF7A66 70%,#E85A45 100%);border:3px solid #0E0817;min-height:240px;">
+          <svg class="absolute" style="top:14px;right:14px;" width="40" height="14" viewBox="0 0 40 14" fill="#0E0817"><rect x="0" y="4" width="6" height="6"/><rect x="9" y="4" width="6" height="6"/><rect x="18" y="4" width="6" height="6"/></svg>
+          <div>
+            <div class="font-mono text-[10px] mb-2 tracking-widest" style="color:#0E0817;">★ HIGH SCORE ★</div>
+            <div class="display text-4xl leading-[0.95]" style="color:#0E0817;">playing<br>games</div>
+          </div>
+          <div>
+            <div class="text-xs mb-3" style="color:#0E0817;opacity:0.85;">scribbl · roblox · gartic · among us · jackbox · codenames</div>
+            <div class="hand text-2xl" style="color:#0E0817;">insert coin to play ▶</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. MIDNIGHT DROPS — mystery card with dashed border -->
+      <div class="col-span-12 sm:col-span-12 lg:col-span-3 relative" style="transform:rotate(-1deg);">
+        <div class="h-full rounded-2xl p-5 flex flex-col justify-between" style="background:linear-gradient(160deg,#3D2A4F 0%,#1A0E2E 100%);border:2px dashed rgba(255,143,181,0.45);min-height:240px;">
+          <div>
+            <div class="font-mono text-[9px] uppercase tracking-widest mb-3" style="color:#FF7A66;">★ daily · 9pm</div>
+            <div class="display text-3xl leading-tight mb-3">midnight<br>check-ins</div>
+            <div class="hand text-xl" style="color:#FF8FB5;">"21. delhi. up too late."</div>
+          </div>
+          <div class="mt-4">
+            <div class="text-center text-[10px] font-mono tracking-widest px-3 py-2 rounded-full" style="background:rgba(255,143,181,0.18);border:1px solid rgba(255,143,181,0.4);color:#FF8FB5;">DROP IN →</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. TRUTH OR DARE — split coin-flip card -->
+      <div class="col-span-12 sm:col-span-6 lg:col-span-4 relative" style="transform:rotate(2deg);">
+        <div class="font-mono text-[9px] uppercase tracking-widest absolute top-3 right-3 z-10 px-2 py-1 rounded-full" style="background:rgba(14,8,20,0.6);color:#FAF0E6;">thu · 11pm</div>
+        <div class="h-full rounded-2xl overflow-hidden flex" style="min-height:220px;box-shadow:0 24px 40px -24px rgba(0,0,0,0.6);">
+          <div class="flex-1 p-5 relative" style="background:linear-gradient(135deg,#FF8FB5,#FB7185);">
+            <div class="font-mono text-[10px] tracking-widest mb-2" style="color:#FAF0E6;">SIDE A</div>
+            <div class="display text-3xl leading-tight" style="color:#FAF0E6;">truth</div>
+            <div class="hand text-lg mt-3" style="color:#FAF0E6;opacity:0.9;">share a story</div>
+          </div>
+          <div class="flex-1 p-5 relative" style="background:linear-gradient(135deg,#9276B8,#5A3F73);">
+            <div class="font-mono text-[10px] tracking-widest mb-2" style="color:#FAF0E6;">SIDE B</div>
+            <div class="display text-3xl leading-tight" style="color:#FAF0E6;">dare</div>
+            <div class="hand text-lg mt-3" style="color:#FAF0E6;opacity:0.9;">play the silly one</div>
+          </div>
+          <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full grid place-items-center" style="background:#FAF0E6;color:#0E0817;font-size:18px;font-weight:bold;">★</div>
+        </div>
+      </div>
+
+      <!-- 5. HIDDEN STORIES — envelope -->
+      <div class="col-span-12 sm:col-span-6 lg:col-span-5 relative" style="transform:rotate(-3deg);">
+        <div class="relative p-7 rounded-sm" style="background:#FAF0E6;min-height:200px;box-shadow:0 24px 40px -20px rgba(0,0,0,0.7);">
+          <div class="absolute inset-x-0 top-0" style="height:38%;background:linear-gradient(180deg,#E8D9C0 0%,#FAF0E6 100%);clip-path:polygon(0 0, 50% 100%, 100% 0);"></div>
+          <div class="absolute" style="top:32%;left:50%;transform:translate(-50%,-50%) rotate(-8deg);width:54px;height:54px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#FF8FB5 0%,#9276B8 100%);display:grid;place-items:center;color:#FAF0E6;font-family:'DM Serif Display',serif;font-size:24px;box-shadow:0 4px 8px rgba(0,0,0,0.3);">t</div>
+
+          <div class="relative pt-12">
+            <div class="font-mono text-[10px] uppercase tracking-widest mb-2" style="color:#9276B8;">fri · 8pm · sealed envelope</div>
+            <div class="display text-4xl leading-[0.95]" style="color:#0E0817;">hidden<br><em class="ital" style="color:#9276B8;">stories.</em></div>
+            <div class="hand text-xl mt-4" style="color:#0E0817;opacity:0.7;">the things you've never told anyone.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6. LATE NIGHT TALKS — vinyl record -->
+      <div class="col-span-12 sm:col-span-6 lg:col-span-3 relative" style="transform:rotate(1deg);">
+        <div class="h-full rounded-2xl p-5 flex flex-col items-center justify-between" style="background:linear-gradient(135deg,#1A0E2E 0%,#0F0814 100%);border:1px solid rgba(146,118,184,0.3);min-height:240px;">
+          <div class="text-center">
+            <div class="font-mono text-[10px] uppercase tracking-widest" style="color:#C8A8E9;">side a · sat 11pm</div>
+          </div>
+          <div class="relative" style="width:130px;height:130px;">
+            <svg viewBox="0 0 130 130" class="spin-slow" style="transform-origin:65px 65px;width:100%;height:100%;">
+              <circle cx="65" cy="65" r="62" fill="#0E0817"/>
+              <circle cx="65" cy="65" r="62" fill="none" stroke="rgba(250,240,230,0.08)" stroke-width="0.4"/>
+              <circle cx="65" cy="65" r="52" fill="none" stroke="rgba(250,240,230,0.1)" stroke-width="0.4"/>
+              <circle cx="65" cy="65" r="42" fill="none" stroke="rgba(250,240,230,0.08)" stroke-width="0.4"/>
+              <circle cx="65" cy="65" r="32" fill="none" stroke="rgba(250,240,230,0.06)" stroke-width="0.4"/>
+              <circle cx="65" cy="65" r="22" fill="#9276B8"/>
+              <text x="65" y="62" font-family="DM Serif Display" font-size="9" fill="#FAF0E6" text-anchor="middle" font-style="italic">late night</text>
+              <text x="65" y="74" font-family="DM Serif Display" font-size="9" fill="#FAF0E6" text-anchor="middle" font-style="italic">talks</text>
+              <circle cx="65" cy="65" r="2" fill="#0E0817"/>
+            </svg>
+          </div>
+          <div class="hand text-xl text-center" style="color:#C8A8E9;line-height:1.1;">one slow song.<br>everyone listens.</div>
+        </div>
+      </div>
+
+      <!-- 7. ADVICE CIRCLE -->
+      <div class="col-span-12 sm:col-span-6 lg:col-span-4 relative" style="transform:rotate(-2deg);">
+        <div class="h-full rounded-2xl p-6 relative overflow-hidden" style="background:radial-gradient(ellipse at 30% 30%,#9FD9B5 0%,#5BAE7E 60%,#3D7A52 100%);min-height:220px;">
+          <div class="absolute right-5 top-5 w-20 h-20 rounded-full grid place-items-center" style="background:radial-gradient(circle at 30% 30%,#FAF0E6 0%,#A89A8D 80%,#5A4F45 100%);">
+            <div class="w-14 h-14 rounded-full grid place-items-center" style="background:#0F0814;">
+              <span class="hand text-[10px] text-center leading-tight" style="color:#9FD9B5;">ask<br>again</span>
+            </div>
+          </div>
+          <div class="relative pt-2 max-w-[60%]">
+            <div class="font-mono text-[10px] uppercase tracking-widest mb-2" style="color:#0E0817;opacity:0.7;">sun · 9pm</div>
+            <div class="display text-3xl leading-[0.95]" style="color:#0E0817;">advice<br><em class="ital">circle.</em></div>
+            <div class="hand text-lg mt-3" style="color:#0E0817;opacity:0.8;">20 strangers, the wisdom you needed.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 8. CONFESSIONS — folded note with wax seal -->
+      <div class="col-span-12 sm:col-span-6 lg:col-span-3 relative" style="transform:rotate(3deg);">
+        <div class="h-full p-5 relative" style="background:#FAF0E6;border-radius:2px;min-height:220px;box-shadow:0 24px 40px -20px rgba(0,0,0,0.6);background-image:linear-gradient(90deg,transparent 49.5%,rgba(168,154,141,0.3) 50%,transparent 50.5%);">
+          <div class="absolute -top-2 -right-2 w-8 h-8" style="background:linear-gradient(225deg,rgba(168,154,141,0.5) 0%,transparent 50%);clip-path:polygon(100% 0,100% 100%,0 100%);"></div>
+          <div class="absolute top-3 right-3 w-12 h-12 rounded-sm grid place-items-center text-xs font-mono" style="background:#FF7A66;color:#FAF0E6;transform:rotate(8deg);">★<br>ANON</div>
+          <div class="relative pt-12">
+            <div class="font-mono text-[10px] uppercase tracking-widest mb-2" style="color:#FF7A66;">always on</div>
+            <div class="display text-3xl leading-tight" style="color:#0E0817;">confessions</div>
+            <div class="hand text-xl mt-3" style="color:#0E0817;opacity:0.75;">"i don't know how to make friends as an adult."</div>
+            <div class="mt-3 text-[10px] font-mono" style="color:#0E0817;opacity:0.5;">— anonymous · 23 reactions</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 9. OPEN MIC — ticket stub -->
+      <div class="col-span-12 sm:col-span-12 lg:col-span-5 relative" style="transform:rotate(-1deg);">
+        <div class="h-full flex rounded-xl overflow-hidden relative" style="min-height:180px;box-shadow:0 24px 40px -20px rgba(0,0,0,0.6);">
+          <div class="flex-1 p-6 relative" style="background:linear-gradient(135deg,#FF7A66,#FF8FB5);">
+            <div class="font-mono text-[10px] uppercase tracking-widest" style="color:#0E0817;opacity:0.7;">★ admit one ★</div>
+            <div class="display text-4xl mt-1 leading-[0.95]" style="color:#0E0817;">open mic<br><em class="ital">night.</em></div>
+            <div class="hand text-xl mt-3" style="color:#0E0817;">poetry. jokes. covers. rants.</div>
+            <div class="mt-4 flex gap-3 text-[10px] font-mono uppercase tracking-widest" style="color:#0E0817;opacity:0.7;">
+              <span>monthly</span>
+              <span>·</span>
+              <span>2 min slots</span>
+              <span>·</span>
+              <span>everyone claps</span>
+            </div>
+          </div>
+          <div class="w-1 self-stretch" style="background:repeating-linear-gradient(180deg,transparent 0,transparent 4px,rgba(14,8,20,0.5) 4px,rgba(14,8,20,0.5) 8px);"></div>
+          <div class="w-20 p-3 flex flex-col items-center justify-between" style="background:linear-gradient(135deg,#FFB088,#FFD56B);">
+            <div class="font-mono text-[9px] uppercase tracking-widest text-center" style="color:#0E0817;opacity:0.6;">stub</div>
+            <div class="display text-3xl" style="color:#0E0817;writing-mode:vertical-rl;transform:rotate(180deg);">tuneD</div>
+            <div class="font-mono text-[9px]" style="color:#0E0817;">#047</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="text-xs font-mono text-dim text-center mb-16">↑ plus movie nights, meme wars, music listening parties, karaoke rooms, geoguessr championships, two-line story circles, anonymous compliment chains, "show your room (no face)" nights, letter to your future self, co-working rooms...</p>
+
+    <!-- FEATURED PEN PAL NIGHTS CARD -->
+    <div class="reveal rounded-3xl p-8 md:p-10 relative overflow-hidden mb-16" style="background: linear-gradient(135deg, rgba(255,143,181,0.15), rgba(200,168,233,0.1), rgba(255,176,136,0.12)); border: 1px solid rgba(255,143,181,0.4);">
+      <div class="orb orb-pink" style="width:300px;height:300px;top:-80px;right:-80px;opacity:0.25;"></div>
+
+      <svg class="absolute twinkle-1" style="top:15%;left:6%;" width="14" height="14" viewBox="0 0 14 14" fill="#FFD56B"><path d="M7 0l1.5 5.5L14 7l-5.5 1.5L7 14l-1.5-5.5L0 7l5.5-1.5z"/></svg>
+      <svg class="absolute twinkle-2" style="bottom:25%;left:3%;" width="10" height="10" viewBox="0 0 14 14" fill="#FF8FB5"><path d="M7 0l1.5 5.5L14 7l-5.5 1.5L7 14l-1.5-5.5L0 7l5.5-1.5z"/></svg>
+
+      <div class="relative z-10 grid md:grid-cols-[1fr_auto] gap-8 items-center">
+        <div>
+          <div class="font-mono text-[11px] tracking-widest uppercase mb-3 flex items-center gap-2" style="color:#FB7185">
+            <span>★ FEATURED EVERY WEEKEND</span>
+          </div>
+          <h3 class="display text-4xl lg:text-5xl leading-[1.0] mb-4">
+            anonymous pen pal nights.<br>
+            <em class="grad-warm">48 hours, just letters.</em>
+          </h3>
+          <p class="text-mute text-base leading-relaxed max-w-xl mb-5">
+            saturday night, two members open an anonymous pen-pal channel for the weekend. both get custom IDs (no real names, no photos, no instagram handles). <strong class="text-ink">48 hours of text-only, written-letter style conversation.</strong> at the end — both decide whether to swap handles or stay anonymous pen pals forever.
+          </p>
+          <p class="hand text-2xl" style="color:#FF8FB5;">some stay strangers. some become favorite people to text at 2am.</p>
+        </div>
+
+        <div class="glass rounded-2xl p-4 w-full md:w-[280px] flex-shrink-0">
+          <div class="flex items-center justify-between mb-3 pb-2 border-b border-line">
+            <div class="flex items-center gap-2">
+              <div class="w-7 h-7 rounded-full bg-base flex items-center justify-center text-dim text-xs">?</div>
+              <div>
+                <div class="text-xs font-medium">pen pal #047</div>
+                <div class="text-[9px] text-dim font-mono">opened · 12 hours ago</div>
+              </div>
+            </div>
+            <span class="font-mono text-[9px] text-pink">36H LEFT</span>
+          </div>
+
+          <div class="space-y-2.5">
+            <div class="flex justify-end">
+              <div class="text-xs px-3 py-1.5 rounded-2xl max-w-[80%]" style="background: rgba(255,143,181,0.25); color: #FAF0E6;">what's the last song that made you cry?</div>
+            </div>
+            <div>
+              <div class="text-xs px-3 py-1.5 rounded-2xl bg-white/5 max-w-[80%] inline-block">"channels" by phoebe. you?</div>
+            </div>
+            <div class="flex justify-end">
+              <div class="text-xs px-3 py-1.5 rounded-2xl max-w-[80%]" style="background: rgba(255,143,181,0.25); color: #FAF0E6;">okay i think we might be the same person</div>
+            </div>
+          </div>
+
+          <div class="mt-3 pt-2 border-t border-line">
+            <button class="w-full py-2 rounded-lg text-[11px] font-medium" style="background: rgba(255,255,255,0.06); color: #A89A8D;">swap handles in 36h • or stay anon</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+</div>
+</section>
+
+<!-- squiggle divider -->
+<div class="flex justify-center my-2">
+  <svg width="120" height="20" viewBox="0 0 120 20" fill="none"><path d="M2 10 Q 12 2, 22 10 T 42 10 T 62 10 T 82 10 T 102 10 T 118 10" stroke="#FFD56B" stroke-width="2" stroke-linecap="round" opacity="0.5"/></svg>
+</div>
+
+<!-- ============ HOW IT WORKS ============ -->
+<section class="relative px-6 lg:px-10 py-24 max-w-6xl mx-auto">
+  <div class="reveal font-mono text-xs tracking-widest uppercase mb-4" style="color:#9FD9B5">/ 04 — the setup</div>
+  <h2 class="reveal display text-5xl lg:text-7xl leading-[1.0]">
+    three steps. <em class="grad-cool">that's it.</em>
+  </h2>
+
+  <div class="reveal-children mt-16 grid grid-cols-1 md:grid-cols-3 gap-5">
+    <div class="glass rounded-2xl p-7">
+      <div class="font-mono text-xs text-dim mb-4">01 / MEMBERSHIP</div>
+      <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-5" style="background: linear-gradient(135deg, #FF7A66, #FF8FB5);">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0E0817" stroke-width="2.5"><path d="M3 10h18M5 6h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"/></svg>
+      </div>
+      <h3 class="display text-2xl mb-2">join the community.</h3>
+      <p class="text-sm text-mute leading-relaxed">razorpay → upi, cards, all that. the second your membership goes through, you get the private discord invite. no waitlist queue. no approval wait.</p>
+    </div>
+    <div class="glass rounded-2xl p-7">
+      <div class="font-mono text-xs text-dim mb-4">02 / VERIFICATION</div>
+      <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-5" style="background: linear-gradient(135deg, #9FD9B5, #FFD56B);">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0E0817" stroke-width="2.5"><path d="M9 12l2 2 4-4M12 22a10 10 0 1 1 0-20 10 10 0 0 1 0 20z"/></svg>
+      </div>
+      <h3 class="display text-2xl mb-2">quick check.</h3>
+      <p class="text-sm text-mute leading-relaxed">an optional verification helps keep the community genuine and low-spam. a real human mod reviews within 24 hours. only they see it. deleted right after.</p>
+    </div>
+    <div class="glass rounded-2xl p-7">
+      <div class="font-mono text-xs text-dim mb-4">03 / YOU'RE IN</div>
+      <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-5" style="background: linear-gradient(135deg, #C8A8E9, #FF8FB5);">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0E0817" stroke-width="2.5"><path d="M12 2l3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg>
+      </div>
+      <h3 class="display text-2xl mb-2">show up. or don't.</h3>
+      <p class="text-sm text-mute leading-relaxed">first event tonight at 9pm. lurk for a week first if you want. zero pressure. the room is just open.</p>
+    </div>
+  </div>
+</section>
+
+<!-- squiggle divider -->
+<div class="flex justify-center my-2">
+  <svg width="120" height="20" viewBox="0 0 120 20" fill="none"><path d="M2 10 Q 12 2, 22 10 T 42 10 T 62 10 T 82 10 T 102 10 T 118 10" stroke="#FF7A66" stroke-width="2" stroke-linecap="round" opacity="0.5"/></svg>
+</div>
+
+<!-- ============ FOUNDER NOTE ============ -->
+<section class="relative px-6 lg:px-10 py-24 max-w-3xl mx-auto">
+  <div class="reveal font-mono text-xs tracking-widest uppercase mb-4" style="color:#C8A8E9">/ 05 — a note from us</div>
+  <h2 class="reveal display text-4xl lg:text-5xl leading-tight mb-10">
+    here's the <em class="ital" style="color:#FF8FB5">honest version</em>.
+  </h2>
+
+  <div class="reveal glass rounded-2xl overflow-hidden">
+    <div class="px-5 py-3.5 border-b border-line flex items-center gap-3" style="background: rgba(0,0,0,0.3);">
+      <div class="avatar online" style="width:32px;height:32px;font-size:13px;--c1:#FF7A66;--c2:#FF8FB5;">Y</div>
+      <div>
+        <div class="text-sm font-medium">[you] & [your friend]</div>
+        <div class="text-[10px] text-dim font-mono">@founders · the two of us</div>
+      </div>
+      <div class="ml-auto flex items-center gap-2 text-[10px] text-dim font-mono">
+        <span class="w-1.5 h-1.5 rounded-full bg-mintDark"></span>
+        ONLINE
+      </div>
+    </div>
+
+    <div class="p-6 space-y-4">
+      <div class="flex gap-3">
+        <div class="avatar" style="width:32px;height:32px;font-size:13px;--c1:#FF7A66;--c2:#FF8FB5;">Y</div>
+        <div class="flex-1">
+          <div class="flex items-baseline gap-2 mb-1">
+            <span class="text-sm font-medium" style="color:#FFB088">us</span>
+            <span class="font-mono text-[10px] text-dim">today · 2:14 AM</span>
+          </div>
+          <div class="text-base leading-relaxed">hey 👋</div>
+          <div class="mt-2 text-base leading-relaxed">we're two friends. just finished second year of college. built this together.</div>
+        </div>
+      </div>
+
+      <div class="flex gap-3">
+        <div class="w-8 flex-shrink-0"></div>
+        <div class="flex-1">
+          <div class="text-base leading-relaxed">honest reason: we kept downloading every social app because everyone said we should. every time we opened them, this weird mix of <em class="ital" style="color:#FF8FB5">bored and stressed</em>.</div>
+          <div class="mt-2 text-base leading-relaxed text-mute">bored because all photos and prompts. stressed because every interaction felt like a job interview. everyone trying to be the most interesting version of themselves.</div>
+        </div>
+      </div>
+
+      <div class="flex gap-3">
+        <div class="w-8 flex-shrink-0"></div>
+        <div class="flex-1">
+          <div class="text-base leading-relaxed">then instagram makes you feel worse with every scroll. college whatsapp groups where nobody talks. <em class="italic">somehow surrounded by people online with no one to talk to at 1am.</em></div>
+        </div>
+      </div>
+
+      <div class="flex gap-3">
+        <div class="w-8 flex-shrink-0"></div>
+        <div class="flex-1">
+          <div class="text-base leading-relaxed">so we started thinking — what if we made a tiny private room where you could just <em class="ital" style="color:#FFB088">be</em>. share a story that nobody knows. play scribbl on a tuesday. truth or dare at 11. swap anonymous letters with a pen pal for 48 hours. give advice you wish you'd gotten. hang out with people who actually want to hang out.</div>
+        </div>
+      </div>
+
+      <div class="flex gap-3">
+        <div class="w-8 flex-shrink-0"></div>
+        <div class="flex-1">
+          <div class="text-base leading-relaxed">that's tuned. a small private social community. just hanging out. just talking. ₹99 lets you in for a week. show up. see if you like it. that's all we're asking.</div>
+        </div>
+      </div>
+
+      <div class="flex gap-3 pt-2">
+        <div class="w-8 flex-shrink-0"></div>
+        <div class="flex-1 flex items-center gap-1.5">
+          <span class="flex gap-0.5">
+            <span class="w-1 h-1 rounded-full bg-mute animate-bounce" style="animation-delay: 0s;"></span>
+            <span class="w-1 h-1 rounded-full bg-mute animate-bounce" style="animation-delay: 0.15s;"></span>
+            <span class="w-1 h-1 rounded-full bg-mute animate-bounce" style="animation-delay: 0.3s;"></span>
+          </span>
+          <span class="hand text-xl" style="color:#FF8FB5;">say hi when you join. for real.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- squiggle divider -->
+<div class="flex justify-center my-2">
+  <svg width="120" height="20" viewBox="0 0 120 20" fill="none"><path d="M2 10 Q 12 2, 22 10 T 42 10 T 62 10 T 82 10 T 102 10 T 118 10" stroke="#FF8FB5" stroke-width="2" stroke-linecap="round" opacity="0.5"/></svg>
+</div>
+
+<!-- ============ PRICING ============ -->
+<section id="pricing" class="relative px-6 lg:px-10 py-24 max-w-6xl mx-auto">
+  <div class="orb orb-coral orb-2" style="width:400px;height:400px;bottom:0;right:-180px;opacity:0.18;"></div>
+
+  <div class="relative z-10">
+    <div class="reveal font-mono text-xs tracking-widest uppercase mb-4" style="color:#FF7A66">/ 06 — membership</div>
+    <h2 class="reveal display text-5xl lg:text-7xl leading-[1.0] max-w-3xl">
+      cheaper than a <em class="ital">zomato order</em>.<br>
+      pick your <em class="grad-warm">stay.</em>
+    </h2>
+
+    <!-- "what membership gets you" block -->
+    <div class="reveal mt-10 p-6 rounded-2xl" style="background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.08);">
+      <div class="font-mono text-[10px] uppercase tracking-widest mb-4" style="color:#FFB088;">community membership includes</div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="flex items-start gap-2 text-sm">
+          <span class="text-coral text-base leading-none mt-0.5">✦</span>
+          <span>private discord spaces</span>
+        </div>
+        <div class="flex items-start gap-2 text-sm">
+          <span class="text-pink text-base leading-none mt-0.5">✦</span>
+          <span>voice lounges &amp; co-working rooms</span>
+        </div>
+        <div class="flex items-start gap-2 text-sm">
+          <span class="text-sun text-base leading-none mt-0.5">✦</span>
+          <span>weekly community events</span>
+        </div>
+        <div class="flex items-start gap-2 text-sm">
+          <span class="text-mint text-base leading-none mt-0.5">✦</span>
+          <span>anonymous games &amp; nights</span>
+        </div>
+        <div class="flex items-start gap-2 text-sm">
+          <span class="text-peach text-base leading-none mt-0.5">✦</span>
+          <span>movie &amp; listening parties</span>
+        </div>
+        <div class="flex items-start gap-2 text-sm">
+          <span class="text-lilac text-base leading-none mt-0.5">✦</span>
+          <span>curated social circles</span>
+        </div>
+        <div class="flex items-start gap-2 text-sm">
+          <span class="text-coral text-base leading-none mt-0.5">✦</span>
+          <span>limited-access rooms</span>
+        </div>
+        <div class="flex items-start gap-2 text-sm">
+          <span class="text-mint text-base leading-none mt-0.5">✦</span>
+          <span>human moderation 24/7</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="reveal mt-6 p-5 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4" style="background: linear-gradient(90deg, rgba(159,217,181,0.1), rgba(159,197,227,0.05)); border: 1px solid rgba(159,217,181,0.35);">
+      <div class="flex items-center gap-4">
+        <div class="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0" style="background: rgba(159,217,181,0.15); border: 1px solid rgba(159,217,181,0.4);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9FD9B5" stroke-width="2"><path d="M12 2l3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg>
+        </div>
+        <div>
+          <div class="font-mono text-[11px] uppercase tracking-widest mb-1" style="color:#9FD9B5">FIRST 50 · FREE WEEK PASS</div>
+          <div class="text-base text-ink">drop your email + a line about why you're here. first 50 on the waitlist get a free 7-day pass. no card.</div>
+        </div>
+      </div>
+      <a href="#waitlist" class="btn-ghost px-5 py-2.5 rounded-full text-sm whitespace-nowrap">request invite →</a>
+    </div>
+
+    <div class="reveal-children mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+      <div class="glass rounded-2xl p-7">
+        <div class="font-mono text-[11px] text-dim uppercase tracking-widest mb-2">/ a quick visit</div>
+        <div class="display text-2xl mb-1">1 week</div>
+        <div class="display text-6xl my-5">₹99</div>
+        <p class="text-sm text-mute mb-6 leading-relaxed">try the community for a week. one voice lounge. one pen-pal weekend. decide.</p>
+        <a href="https://rzp.io/rzp/OmGrtGGh" target="_blank" class="btn-ghost block text-center px-5 py-3 rounded-full text-sm">try a week</a>
+      </div>
+      <div class="glass rounded-2xl p-7">
+        <div class="font-mono text-[11px] text-dim uppercase tracking-widest mb-2">/ a real stay</div>
+        <div class="display text-2xl mb-1">1 month</div>
+        <div class="display text-6xl my-5">₹299</div>
+        <p class="text-sm text-mute mb-6 leading-relaxed">four voice lounges. four pen-pal weekends. enough to know if it clicks.</p>
+        <a href="https://rzp.io/rzp/cyoGth0t" target="_blank" class="btn-ghost block text-center px-5 py-3 rounded-full text-sm">get the month</a>
+      </div>
+      <div class="glass rounded-2xl p-7">
+        <div class="font-mono text-[11px] text-dim uppercase tracking-widest mb-2">/ a whole era</div>
+        <div class="display text-2xl mb-1">1 year</div>
+        <div class="display text-6xl my-5">₹999</div>
+        <p class="text-sm text-mute mb-6 leading-relaxed">~₹83/month. best value. one rough week this year — we'll be here.</p>
+        <a href="https://rzp.io/rzp/Z2NB4m8N" target="_blank" class="btn-ghost block text-center px-5 py-3 rounded-full text-sm">get the year</a>
+      </div>
+      <div class="price-featured rounded-2xl p-7 relative">
+        <div class="absolute -top-3 left-7 px-3 py-1 rounded-full text-[10px] font-mono tracking-widest uppercase font-medium" style="background: linear-gradient(135deg, #FF8FB5, #FFD56B); color: #0E0817;">first 100 only</div>
+        <div class="font-mono text-[11px] uppercase tracking-widest mb-2" style="color:#FFB088">/ the vinyl</div>
+        <div class="display text-2xl mb-1">lifetime pass</div>
+        <div class="display text-6xl my-5 grad-warm">₹4,999</div>
+        <p class="text-sm text-mute mb-3 leading-relaxed">free forever. even when the app launches. founding badge nobody can buy later.</p>
+
+        <!-- founding seats progress -->
+        <div class="mb-5">
+          <div class="flex items-baseline justify-between mb-1.5">
+            <span class="font-mono text-[9px] uppercase tracking-widest text-dim">seats claimed</span>
+            <span class="font-mono text-[10px]"><span style="color:#FFD56B;font-weight:600;">43</span><span class="text-dim"> / 100</span></span>
+          </div>
+          <div class="seat-bar"><div class="seat-bar-fill" style="width:43%;"></div></div>
+        </div>
+
+        <a href="https://rzp.io/rzp/QZnbMPVP" target="_blank" class="btn-primary block text-center px-5 py-3 rounded-full text-sm">grab a vinyl →</a>
+      </div>
+    </div>
+
+    <p class="mt-8 text-center text-xs font-mono text-dim">all prices in inr · community membership subscription · your statement reads "tuned services" · payments are final</p>
+  </div>
+</section>
+
+<!-- squiggle divider -->
+<div class="flex justify-center my-2">
+  <svg width="120" height="20" viewBox="0 0 120 20" fill="none"><path d="M2 10 Q 12 2, 22 10 T 42 10 T 62 10 T 82 10 T 102 10 T 118 10" stroke="#9FD9B5" stroke-width="2" stroke-linecap="round" opacity="0.5"/></svg>
+</div>
+
+<!-- ============ TRUST ============ -->
+<section class="relative px-6 lg:px-10 py-24 max-w-6xl mx-auto">
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+    <div class="lg:col-span-5">
+      <div class="reveal font-mono text-xs tracking-widest uppercase mb-4" style="color:#9FD9B5">/ 07 — built for safety</div>
+      <h2 class="reveal display text-4xl lg:text-5xl leading-tight">
+        we keep this <em class="ital" style="color:#FFB088">small</em><br>
+        on purpose.
+      </h2>
+      <p class="reveal mt-6 text-mute leading-relaxed text-lg">most "community" apps in india get gross once they scale. ours won't grow until we can keep it safe. the small price tag is part of that — it filters the energy we don't want.</p>
+    </div>
+
+    <div class="reveal-children lg:col-span-7 space-y-3">
+      <div class="glass rounded-2xl p-5 flex gap-4">
+        <div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0" style="background: rgba(159,217,181,0.15); border:1px solid rgba(159,217,181,0.3);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9FD9B5" stroke-width="2"><path d="M9 12l2 2 4-4M12 22a10 10 0 1 1 0-20 10 10 0 0 1 0 20z"/></svg>
+        </div>
+        <div>
+          <h4 class="display text-xl mb-1">every member, human-reviewed</h4>
+          <p class="text-sm text-mute">a quick verification by a real mod within 24 hours. only they see it. deleted right after approval. private by default.</p>
+        </div>
+      </div>
+      <div class="glass rounded-2xl p-5 flex gap-4">
+        <div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0" style="background: rgba(255,143,181,0.15); border:1px solid rgba(255,143,181,0.3);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FF8FB5" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M4.93 4.93l14.14 14.14"/></svg>
+        </div>
+        <div>
+          <h4 class="display text-xl mb-1">moderated spaces · one-strike on creeps</h4>
+          <p class="text-sm text-mute">human mods are around. one report to a mod and a member's gone. no warnings, no "but he said sorry," no second chances.</p>
+        </div>
+      </div>
+      <div class="glass rounded-2xl p-5 flex gap-4">
+        <div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0" style="background: rgba(200,168,233,0.15); border:1px solid rgba(200,168,233,0.3);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C8A8E9" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 4v6l4 2"/></svg>
+        </div>
+        <div>
+          <h4 class="display text-xl mb-1">a handle, not your name</h4>
+          <p class="text-sm text-mute">most members go by a vibe handle. the razorpay statement reads "tuned services" — nothing about your activity is visible outside the community.</p>
+        </div>
+      </div>
+      <div class="glass rounded-2xl p-5 flex gap-4">
+        <div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0" style="background: rgba(255,176,136,0.15); border:1px solid rgba(255,176,136,0.3);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFB088" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21v-2a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v2"/></svg>
+        </div>
+        <div>
+          <h4 class="display text-xl mb-1">report &amp; block systems · women-only sub-channel</h4>
+          <p class="text-sm text-mute">block any member with a tap. there's also a women-only sub-channel run by female mods, available to verified female members from day one.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- squiggle divider -->
+<div class="flex justify-center my-2">
+  <svg width="120" height="20" viewBox="0 0 120 20" fill="none"><path d="M2 10 Q 12 2, 22 10 T 42 10 T 62 10 T 82 10 T 102 10 T 118 10" stroke="#FFD56B" stroke-width="2" stroke-linecap="round" opacity="0.5"/></svg>
+</div>
+
+<!-- ============ WAITLIST ============ -->
+<section id="waitlist" class="relative px-6 lg:px-10 py-24">
+  <div class="orb orb-pink orb-1" style="width:500px;height:500px;top:50%;left:50%;transform:translate(-50%,-50%);opacity:0.2;"></div>
+
+  <div class="reveal relative z-10 max-w-3xl mx-auto glass rounded-3xl p-10 lg:p-14 text-center">
+    <div class="font-mono text-xs tracking-widest uppercase mb-4" style="color:#9FD9B5">/ b-side · request an invite</div>
+    <h2 class="display text-4xl lg:text-6xl leading-tight mb-4">
+      not ready yet?<br>
+      <em class="grad-warm">that's fair.</em>
+    </h2>
+    <p class="text-mute mb-8 max-w-xl mx-auto text-lg">drop your email + a line about why you're here. first 50 on the waitlist get a free 7-day pass. zero spam, ever.</p>
+
+    <form id="waitlist-form" method="POST" target="waitlist-iframe" class="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto">
+      <input required type="text" name="name" placeholder="your name" class="flex-1 px-5 py-3.5 rounded-full bg-base/60 border border-line2 text-ink placeholder:text-dim focus:border-coral transition">
+      <input required type="email" name="email" placeholder="email" class="flex-1 px-5 py-3.5 rounded-full bg-base/60 border border-line2 text-ink placeholder:text-dim focus:border-coral transition">
+      <button type="submit" class="btn-primary px-6 py-3.5 rounded-full whitespace-nowrap">request invite →</button>
+    </form>
+    <iframe name="waitlist-iframe" style="display:none" aria-hidden="true" tabindex="-1"></iframe>
+    <div id="waitlist-success" class="hidden text-center">
+      <p class="hand text-4xl text-coral mb-2">you're in ♡</p>
+      <p class="text-mute text-sm">we'll email when the door opens. check spam just in case.</p>
+    </div>
+    <p class="mt-8 hand text-2xl text-coral">see you inside ♡</p>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section id="faq" class="relative px-6 lg:px-10 py-24 max-w-4xl mx-auto">
+  <div class="reveal font-mono text-xs tracking-widest uppercase mb-4 text-dim">/ bonus · faq</div>
+  <h2 class="reveal display text-5xl lg:text-7xl leading-[1.0] mb-12">
+    questions, <em class="ital">answered.</em>
+  </h2>
+
+  <div class="reveal-children space-y-3">
+    <details class="glass rounded-2xl p-6 group">
+      <summary class="flex items-center justify-between">
+        <span class="text-lg font-medium">is this an app or a website?</span>
+        <span class="faq-plus text-2xl font-light" style="color:#FFB088">+</span>
+      </summary>
+      <p class="mt-4 text-mute leading-relaxed">right now, neither — and that's intentional. the community lives on private discord spaces. you pay your membership through this site, get an instant invite, you're in. the actual app launches later this year. lifetime pass holders get it free forever.</p>
+    </details>
+
+    <details class="glass rounded-2xl p-6 group">
+      <summary class="flex items-center justify-between">
+        <span class="text-lg font-medium">why pay for a community?</span>
+        <span class="faq-plus text-2xl font-light" style="color:#FFB088">+</span>
+      </summary>
+      <p class="mt-4 text-mute leading-relaxed">because every free indian community space gets overrun within a week. our small membership fee filters the energy we don't want. plus you're directly funding the app build. the price is the safety feature.</p>
+    </details>
+
+    <details class="glass rounded-2xl p-6 group">
+      <summary class="flex items-center justify-between">
+        <span class="text-lg font-medium">is this a dating app?</span>
+        <span class="faq-plus text-2xl font-light" style="color:#FFB088">+</span>
+      </summary>
+      <p class="mt-4 text-mute leading-relaxed">no. tuned is a private social community — not a dating app, not a matchmaking platform. we don't pair people romantically, we don't have profile cards to swipe on, we don't connect strangers for anything beyond friendship and conversation. members come for the voice lounges, games, anonymous nights, advice circles, and the 2am chats. that's the whole product.</p>
+    </details>
+
+    <details class="glass rounded-2xl p-6 group">
+      <summary class="flex items-center justify-between">
+        <span class="text-lg font-medium">i'm a girl. is it actually safe?</span>
+        <span class="faq-plus text-2xl font-light" style="color:#FFB088">+</span>
+      </summary>
+      <p class="mt-4 text-mute leading-relaxed">verification is human-reviewed. one-strike ban on creep behavior — no warnings. there's a women-only sub-channel run by female mods. one report to a mod = the member is gone within hours. block any other member with a tap.</p>
+    </details>
+
+    <details class="glass rounded-2xl p-6 group">
+      <summary class="flex items-center justify-between">
+        <span class="text-lg font-medium">what if my parents see this?</span>
+        <span class="faq-plus text-2xl font-light" style="color:#FFB088">+</span>
+      </summary>
+      <p class="mt-4 text-mute leading-relaxed">razorpay shows "tuned services" on your statement — no other description anywhere. you sign in with a handle, not your name. only the verification mod sees your selfie, and it's deleted after approval.</p>
+    </details>
+
+    <details class="glass rounded-2xl p-6 group">
+      <summary class="flex items-center justify-between">
+        <span class="text-lg font-medium">do i have to show my face?</span>
+        <span class="faq-plus text-2xl font-light" style="color:#FFB088">+</span>
+      </summary>
+      <p class="mt-4 text-mute leading-relaxed">only during verification, only once, only to one mod. inside the community, photo is optional and shown last — voice and conversation first. plenty of members never share a face photo.</p>
+    </details>
+
+    <details class="glass rounded-2xl p-6 group">
+      <summary class="flex items-center justify-between">
+        <span class="text-lg font-medium">can i get a refund?</span>
+        <span class="faq-plus text-2xl font-light" style="color:#FFB088">+</span>
+      </summary>
+      <p class="mt-4 text-mute leading-relaxed">most membership payments are final, but there are a few specific cases where we will refund — if access never arrives, duplicate payments, or material service changes. see the <a href="refunds.html" class="underline" style="color:#FF8FB5;">refunds page</a> for the full list. try the free 7-day pass first if you're unsure, or start with the ₹99 weekly.</p>
+    </details>
+
+    <details class="glass rounded-2xl p-6 group">
+      <summary class="flex items-center justify-between">
+        <span class="text-lg font-medium">i'm not "musical" or a gamer. can i still join?</span>
+        <span class="faq-plus text-2xl font-light" style="color:#FFB088">+</span>
+      </summary>
+      <p class="mt-4 text-mute leading-relaxed">absolutely. music + games are TWO of many things. there's also voice lounges, introductions, hidden stories, anonymous confessions, pen pal nights, advice circles, open mic, movie nights, co-working. lurking in any of these is allowed. there's a slot for you.</p>
+    </details>
+  </div>
+</section>
+
+<!-- ============ FINAL CTA ============ -->
+<section class="relative px-6 lg:px-10 py-32 text-center overflow-hidden">
+  <div class="orb orb-coral orb-2" style="width:500px;height:500px;bottom:-200px;left:50%;transform:translateX(-50%);opacity:0.3;"></div>
+
+  <svg class="absolute twinkle-1" style="top:20%;left:10%;" width="20" height="20" viewBox="0 0 14 14" fill="#FFD56B"><path d="M7 0l1.5 5.5L14 7l-5.5 1.5L7 14l-1.5-5.5L0 7l5.5-1.5z"/></svg>
+  <svg class="absolute twinkle-2" style="top:30%;right:12%;" width="14" height="14" viewBox="0 0 14 14" fill="#FF8FB5"><path d="M7 0l1.5 5.5L14 7l-5.5 1.5L7 14l-1.5-5.5L0 7l5.5-1.5z"/></svg>
+  <svg class="absolute twinkle-3" style="bottom:30%;left:18%;" width="16" height="16" viewBox="0 0 14 14" fill="#9FD9B5"><path d="M7 0l1.5 5.5L14 7l-5.5 1.5L7 14l-1.5-5.5L0 7l5.5-1.5z"/></svg>
+
+  <div class="reveal relative z-10 max-w-3xl mx-auto">
+    <h2 class="display text-6xl lg:text-8xl leading-[1.0]">
+      a small room.<br>
+      <em class="grad-warm">the door is open.</em>
+    </h2>
+    <p class="mt-8 text-mute max-w-md mx-auto text-lg">no algorithm pulling you in. no streak threatening to break. just a room. whenever you're ready.</p>
+    <div class="mt-12 flex flex-col sm:flex-row items-center justify-center gap-3">
+      <a href="#pricing" class="btn-primary px-8 py-4 rounded-full text-base" data-magnetic>come in for ₹99 →</a>
+      <a href="#waitlist" class="btn-ghost px-8 py-4 rounded-full text-base">or request an invite, free →</a>
+    </div>
+    <p class="mt-12 hand text-3xl text-coral">see you inside ♡</p>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="relative z-10 px-6 lg:px-10 py-12 border-t border-line">
+  <div class="max-w-6xl mx-auto">
+    <div class="flex flex-col md:flex-row justify-between items-start gap-8">
+      <div class="max-w-sm">
+        <div class="flex items-center gap-2.5 mb-3">
+          <svg viewBox="0 0 36 36" class="w-7 h-7">
+            <circle cx="18" cy="18" r="17" fill="#0E0817" stroke="#FF7A66" stroke-width="1.5"/>
+            <g class="spin-slow" style="transform-origin: 18px 18px;">
+              <circle cx="18" cy="18" r="5" fill="#FF7A66"/>
+              <circle cx="18" cy="18" r="1.5" fill="#0E0817"/>
+            </g>
+          </svg>
+          <span class="display text-2xl">tune<em class="italic" style="color:#FF8FB5">d</em></span>
+        </div>
+        <p class="text-mute text-sm">a private online social community for indian gen z.<br>built by two friends. still in beta. say hi.</p>
+      </div>
+      <div class="flex flex-col gap-3">
+        <div class="font-mono text-[10px] uppercase tracking-widest text-dim">fine print</div>
+        <div class="flex flex-wrap gap-x-5 gap-y-2 text-sm text-mute">
+          <a href="privacy.html" class="hover:text-ink transition">privacy</a>
+          <a href="terms.html" class="hover:text-ink transition">terms</a>
+          <a href="refunds.html" class="hover:text-ink transition">refunds</a>
+          <a href="delivery.html" class="hover:text-ink transition">digital access</a>
+          <a href="contact.html" class="hover:text-ink transition">contact</a>
+        </div>
+      </div>
+    </div>
+    <div class="mt-10 pt-6 border-t border-line flex flex-col sm:flex-row justify-between gap-3 text-xs font-mono text-dim uppercase tracking-wider">
+      <div>© 2026 tuned · built in india with ♡</div>
+      <div>v1 · pre-launch</div>
+    </div>
+  </div>
+</footer>
+
+<!-- cursor spotlight -->
+<div class="spotlight"></div>
+
+<script>
+  // ============ scroll reveals ============
+  (function() {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+    document.querySelectorAll('.reveal, .reveal-children').forEach((el) => observer.observe(el));
+  })();
+
+  // ============ word-by-word hero reveal ============
+  (function() {
+    const words = document.querySelectorAll('.word-reveal');
+    words.forEach((w, i) => {
+      setTimeout(() => w.classList.add('show'), 200 + i * 150);
+    });
+    setTimeout(() => {
+      const sq = document.getElementById('hero-squiggle');
+      if (sq) sq.style.opacity = '1';
+    }, 200 + words.length * 150 + 400);
+  })();
+
+  // ============ 3D CARD TILT on hover (desktop) ============
+  (function() {
+    const isTouch = window.matchMedia('(hover: none)').matches;
+    if (isTouch) return;
+    document.querySelectorAll('.glass, .price-featured').forEach((card) => {
+      card.style.transformStyle = 'preserve-3d';
+      card.style.willChange = 'transform';
+      card.addEventListener('mousemove', (e) => {
+        const r = card.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width - 0.5;
+        const y = (e.clientY - r.top) / r.height - 0.5;
+        const tiltX = -y * 6;
+        const tiltY = x * 6;
+        card.style.transform = `perspective(900px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) translateY(-3px)`;
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = '';
+      });
+    });
+  })();
+
+  // ============ LOGO CLICK EASTER EGG (heart burst) ============
+  (function() {
+    const logo = document.querySelector('nav a');
+    if (!logo) return;
+    logo.addEventListener('click', (e) => {
+      e.preventDefault();
+      const r = logo.getBoundingClientRect();
+      const cx = r.left + r.width/2;
+      const cy = r.top + r.height/2;
+      const emojis = ['♡', '✦', '✿', '★', '♪'];
+      const colors = ['#FF7A66', '#FF8FB5', '#FFD56B', '#9FD9B5', '#C8A8E9'];
+      for (let i = 0; i < 16; i++) {
+        const el = document.createElement('span');
+        el.textContent = emojis[i % emojis.length];
+        el.style.cssText = `
+          position: fixed;
+          left: ${cx}px;
+          top: ${cy}px;
+          font-size: ${18 + Math.random()*16}px;
+          color: ${colors[i % colors.length]};
+          pointer-events: none;
+          z-index: 9999;
+          transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.2s ease-out;
+          opacity: 1;
+          transform: translate(-50%, -50%);
+          will-change: transform, opacity;
+        `;
+        document.body.appendChild(el);
+        const angle = (Math.PI * 2 * i) / 16 + (Math.random() - 0.5) * 0.4;
+        const dist = 80 + Math.random() * 120;
+        const dx = Math.cos(angle) * dist;
+        const dy = Math.sin(angle) * dist - 40;
+        requestAnimationFrame(() => {
+          el.style.transform = `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px)) rotate(${(Math.random()-0.5)*180}deg) scale(${0.6 + Math.random()*0.8})`;
+          el.style.opacity = '0';
+        });
+        setTimeout(() => el.remove(), 1200);
+      }
+    });
+  })();
+
+  // ============ cursor spotlight (desktop only) ============
+  (function() {
+    const spotlight = document.querySelector('.spotlight');
+    if (!spotlight) return;
+    const isTouch = window.matchMedia('(hover: none)').matches;
+    if (isTouch) { spotlight.style.display = 'none'; return; }
+    let mx = innerWidth/2, my = innerHeight/2, px = mx, py = my;
+    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; spotlight.style.opacity = 1; });
+    document.addEventListener('mouseleave', () => { spotlight.style.opacity = 0; });
+    function tick() {
+      px += (mx - px) * 0.12;
+      py += (my - py) * 0.12;
+      spotlight.style.left = px + 'px';
+      spotlight.style.top = py + 'px';
+      requestAnimationFrame(tick);
+    }
+    tick();
+  })();
+
+  // ============ magnetic buttons ============
+  (function() {
+    const isTouch = window.matchMedia('(hover: none)').matches;
+    if (isTouch) return;
+    document.querySelectorAll('[data-magnetic]').forEach((btn) => {
+      btn.addEventListener('mousemove', (e) => {
+        const r = btn.getBoundingClientRect();
+        const x = e.clientX - r.left - r.width/2;
+        const y = e.clientY - r.top - r.height/2;
+        btn.style.transform = `translate(${x*0.22}px, ${y*0.26}px)`;
+      });
+      btn.addEventListener('mouseleave', () => {
+        btn.style.transform = '';
+      });
+    });
+  })();
+
+  // ============ WAITLIST FORM → Google Sheets via hidden-iframe submit ============
+  (function() {
+    const WAITLIST_ENDPOINT = 'https://script.google.com/macros/s/AKfycbyWL_pyQV0mL20FlFDxIBhcVwwX2AdTszO1M_nbK2hXVCQ8OHFgbFV0AvAYBD-koBp5/exec';
+
+    const form = document.getElementById('waitlist-form');
+    const success = document.getElementById('waitlist-success');
+    if (!form) return;
+
+    form.setAttribute('action', WAITLIST_ENDPOINT);
+
+    form.addEventListener('submit', (e) => {
+      const btn = form.querySelector('button[type="submit"]');
+      btn.textContent = 'requesting...';
+      btn.disabled = true;
+      btn.style.opacity = '0.7';
+
+      setTimeout(() => {
+        const r = form.getBoundingClientRect();
+        const cx = r.left + r.width / 2;
+        const cy = r.top + r.height / 2;
+        form.classList.add('hidden');
+        success.classList.remove('hidden');
+        const emojis = ['♡', '✦', '✿', '★'];
+        const colors = ['#FF7A66', '#FF8FB5', '#FFD56B', '#9FD9B5'];
+        for (let i = 0; i < 14; i++) {
+          const el = document.createElement('span');
+          el.textContent = emojis[i % emojis.length];
+          el.style.cssText = `position:fixed;left:${cx}px;top:${cy}px;font-size:${20+Math.random()*14}px;color:${colors[i%colors.length]};pointer-events:none;z-index:9999;transition:transform 1.2s cubic-bezier(0.16,1,0.3,1),opacity 1.2s ease-out;opacity:1;transform:translate(-50%,-50%);`;
+          document.body.appendChild(el);
+          const angle = (Math.PI * 2 * i) / 14 + (Math.random() - 0.5) * 0.4;
+          const dist = 100 + Math.random() * 120;
+          requestAnimationFrame(() => {
+            el.style.transform = `translate(calc(-50% + ${Math.cos(angle)*dist}px), calc(-50% + ${Math.sin(angle)*dist - 30}px)) rotate(${(Math.random()-0.5)*180}deg)`;
+            el.style.opacity = '0';
+          });
+          setTimeout(() => el.remove(), 1200);
+        }
+      }, 800);
+    });
+  })();
+</script>
+
+</body>
+</html>

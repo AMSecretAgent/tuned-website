@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>digital access policy — tuned</title>
+<meta name="description" content="How your tuned membership is delivered — digital access only, no physical shipping.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..900,0..100,0..1;1,9..144,300..900,0..100,0..1&family=DM+Sans:opsz,wght@9..40,300..800&family=Caveat:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = { theme: { extend: {
+    fontFamily: { display: ['Fraunces','serif'], body: ['"DM Sans"','sans-serif'], hand: ['Caveat','cursive'], mono: ['"JetBrains Mono"','monospace'] },
+    colors: { base:'#0E0817', surface:'#181025', elevated:'#221731', line:'rgba(255,255,255,0.07)', line2:'rgba(255,255,255,0.14)', ink:'#FAF0E6', warm:'#F2E8D5', mute:'#A89A8D', dim:'#6E6378', coral:'#FF7A66', peach:'#FFB088', pink:'#FF8FB5', rose:'#FB7185', mint:'#9FD9B5', mintDark:'#5BAE7E', sun:'#FFD56B', lilac:'#C8A8E9', plum:'#9276B8', sky:'#9BC5E3' },
+  } } };
+</script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { background: #0F0814; color: #FAF0E6; font-family: 'DM Sans', system-ui, sans-serif; overflow-x: hidden; position: relative; letter-spacing: -0.01em; }
+  .display { font-family: 'Fraunces', serif; font-weight: 700; letter-spacing: -0.03em; line-height: 1; font-variation-settings: "opsz" 144, "SOFT" 100, "WONK" 1; }
+  .display em, .display .ital { font-family: 'Fraunces', serif; font-style: italic; font-weight: 700; display: inline-block; padding-bottom: 0.08em; line-height: 1; font-variation-settings: "opsz" 144, "SOFT" 100, "WONK" 1; }
+  .hand { font-family: 'Caveat', cursive; font-weight: 600; }
+  body::before { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 1; opacity: 0.05; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/></svg>"); mix-blend-mode: overlay; }
+  .orb { position: absolute; border-radius: 50%; filter: blur(80px); pointer-events: none; opacity: 0.22; }
+  .orb-sun { background: #FFD56B; } .orb-lilac { background: #C8A8E9; }
+  @keyframes spin { from { transform: rotate(0); } to { transform: rotate(360deg); } }
+  .spin-slow { animation: spin 8s linear infinite; transform-origin: center; }
+  @keyframes twinkle { 0%, 100% { opacity: 0.3; transform: scale(0.85); } 50% { opacity: 1; transform: scale(1.1); } }
+  .twinkle-1 { animation: twinkle 2.5s ease-in-out infinite; }
+  .twinkle-2 { animation: twinkle 3s ease-in-out infinite 0.7s; }
+  .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+  .reveal.in-view { opacity: 1; transform: translateY(0); }
+  @keyframes grad-shift { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+  .grad-warm { background: linear-gradient(90deg, #FF7A66 0%, #FFB088 25%, #FF8FB5 50%, #FFD56B 75%, #FF7A66 100%); background-size: 250% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: grad-shift 7s ease-in-out infinite; }
+  .grad-cool { background: linear-gradient(90deg, #9FD9B5 0%, #C8A8E9 50%, #FF8FB5 100%); background-size: 200% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: grad-shift 8s ease-in-out infinite; }
+  .btn-primary { background: linear-gradient(135deg, #FF7A66 0%, #FF8FB5 100%); color: #0E0817; transition: transform 0.3s cubic-bezier(0.16,1,0.3,1), box-shadow 0.3s ease; box-shadow: 0 1px 0 rgba(255,255,255,0.2) inset, 0 8px 30px -8px rgba(255,122,102,0.5); font-weight: 700; }
+  .btn-primary:hover { box-shadow: 0 1px 0 rgba(255,255,255,0.3) inset, 0 16px 40px -8px rgba(255,122,102,0.7); }
+  .btn-ghost { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.14); color: #FAF0E6; transition: all 0.3s ease; font-weight: 600; backdrop-filter: blur(8px); }
+  .btn-ghost:hover { background: rgba(255,255,255,0.07); border-color: rgba(255,176,136,0.4); }
+  .glass { background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.08); backdrop-filter: blur(10px); transition: background 0.3s ease, border-color 0.3s ease; }
+  .glass:hover { background: rgba(255,255,255,0.04); border-color: rgba(255,176,136,0.25); }
+  .legal-prose { font-size: 1.0625rem; line-height: 1.75; color: #C7BBB0; }
+  .legal-prose p { margin-bottom: 1.1em; }
+  .legal-prose strong { color: #FAF0E6; font-weight: 600; }
+  .legal-prose em { color: #FFB088; font-style: italic; }
+  .legal-prose a { color: #FF8FB5; text-decoration: underline; text-underline-offset: 3px; }
+  .legal-prose a:hover { color: #FFD56B; }
+  .legal-prose ul { margin: 0.5em 0 1.2em; padding-left: 0; list-style: none; }
+  .legal-prose ul li { position: relative; padding-left: 1.5em; margin-bottom: 0.5em; }
+  .legal-prose ul li::before { content: "✦"; position: absolute; left: 0; top: 0; color: #FF8FB5; font-size: 0.85em; }
+  .section-num { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase; color: #FF8FB5; margin-bottom: 0.75rem; display: block; }
+  .squiggle { display: flex; justify-content: center; margin: 2.5rem 0; }
+
+  /* delivery steps timeline */
+  .step-row {
+    display: grid;
+    grid-template-columns: 60px 1fr;
+    gap: 20px;
+    align-items: flex-start;
+    padding: 18px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    position: relative;
+  }
+  .step-row:last-of-type { border-bottom: none; }
+  .step-num {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: linear-gradient(135deg, rgba(255,122,102,0.18), rgba(255,143,181,0.12));
+    border: 1px solid rgba(255,143,181,0.35);
+    display: grid; place-items: center;
+    font-family: 'Fraunces', serif; font-style: italic; font-weight: 700; font-size: 18px;
+    color: #FFB088;
+  }
+  .step-body h4 { font-family: 'Fraunces', serif; font-weight: 700; font-size: 1.25rem; color: #FAF0E6; margin-bottom: 6px; line-height: 1.2; }
+  .step-body p { color: #C7BBB0; font-size: 0.95rem; line-height: 1.65; margin: 0; }
+  .step-time { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: #FFD56B; margin-top: 6px; display: inline-block; }
+
+  input:focus, button:focus, a:focus { outline: 2px solid rgba(255,176,136,0.5); outline-offset: 2px; }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } .reveal { opacity: 1 !important; transform: none !important; } }
+</style>
+</head>
+<body class="font-body antialiased">
+
+<nav class="relative z-30 px-6 lg:px-10 py-5 flex items-center justify-between border-b border-line backdrop-blur-sm" style="background: rgba(14,8,23,0.75);">
+  <a href="index.html" class="flex items-center gap-2.5">
+    <div class="relative w-9 h-9">
+      <svg viewBox="0 0 36 36" class="w-9 h-9">
+        <circle cx="18" cy="18" r="17" fill="#0E0817" stroke="#FF7A66" stroke-width="1.5"/>
+        <g class="spin-slow" style="transform-origin: 18px 18px;">
+          <circle cx="18" cy="18" r="14" fill="none" stroke="rgba(250,240,230,0.15)" stroke-width="0.4"/>
+          <circle cx="18" cy="18" r="11" fill="none" stroke="rgba(250,240,230,0.12)" stroke-width="0.4"/>
+          <circle cx="18" cy="18" r="8" fill="none" stroke="rgba(250,240,230,0.1)" stroke-width="0.4"/>
+          <circle cx="18" cy="18" r="5" fill="#FF7A66"/>
+          <circle cx="18" cy="18" r="1.5" fill="#0E0817"/>
+        </g>
+      </svg>
+    </div>
+    <span class="font-display text-2xl">tune<em class="italic" style="color:#FF8FB5">d</em></span>
+  </a>
+  <div class="hidden md:flex items-center gap-7 text-sm text-mute">
+    <a href="index.html#why" class="hover:text-ink transition">why</a>
+    <a href="index.html#nights" class="hover:text-ink transition">what we do</a>
+    <a href="index.html#pricing" class="hover:text-ink transition">membership</a>
+    <a href="index.html#faq" class="hover:text-ink transition">faq</a>
+  </div>
+  <a href="index.html#pricing" class="btn-primary text-sm px-5 py-2 rounded-full">come in →</a>
+</nav>
+
+<!-- HERO -->
+<section class="relative px-6 lg:px-10 pt-16 lg:pt-20 pb-16 overflow-hidden">
+  <div class="orb orb-sun" style="width:440px;height:440px;top:-140px;right:-100px;"></div>
+  <div class="orb orb-lilac" style="width:360px;height:360px;top:120px;left:-120px;opacity:0.15;"></div>
+
+  <svg class="absolute pointer-events-none twinkle-1 hidden md:block" style="top:140px;left:20%;" width="14" height="14" viewBox="0 0 14 14" fill="#FFD56B"><path d="M7 0l1.5 5.5L14 7l-5.5 1.5L7 14l-1.5-5.5L0 7l5.5-1.5z"/></svg>
+  <svg class="absolute pointer-events-none twinkle-2 hidden md:block" style="top:260px;right:14%;" width="10" height="10" viewBox="0 0 14 14" fill="#FF8FB5"><path d="M7 0l1.5 5.5L14 7l-5.5 1.5L7 14l-1.5-5.5L0 7l5.5-1.5z"/></svg>
+
+  <div class="relative z-10 max-w-4xl mx-auto">
+    <div class="reveal font-mono text-xs tracking-widest uppercase mb-4" style="color:#FFD56B">/ side b — digital access policy</div>
+    <h1 class="reveal display text-5xl sm:text-6xl lg:text-7xl leading-[0.95]">
+      nothing arrives<br>in the <em class="grad-warm">post.</em>
+    </h1>
+    <div class="reveal mt-6 flex flex-wrap items-center gap-4 text-sm">
+      <span class="font-mono text-xs uppercase tracking-widest text-dim">effective · may 24, 2026</span>
+      <span class="text-dim">·</span>
+      <span class="hand text-xl" style="color:#FFB088;">access in minutes, not days</span>
+    </div>
+    <p class="reveal mt-8 text-lg text-mute leading-relaxed max-w-2xl">
+      tuned is a digital service. there is no physical product, no courier, no tracking number. when you pay, you get access to the community within minutes — entirely online. here's exactly how that works.
+    </p>
+  </div>
+</section>
+
+<section class="relative px-6 lg:px-10 pb-24 max-w-3xl mx-auto">
+
+  <!-- 01 -->
+  <div class="reveal mb-14">
+    <span class="section-num">/ 01 — what tuned delivers</span>
+    <h2 class="display text-3xl sm:text-4xl mb-5 leading-tight">digital, <em class="ital" style="color:#FF8FB5">only.</em></h2>
+    <div class="legal-prose">
+      <p>your tuned membership grants <strong>digital access</strong> to a private online community and its associated events, lounges, channels, and features. it includes:</p>
+      <ul>
+        <li>an invite to our private discord-hosted community spaces</li>
+        <li>permission to attend scheduled community events, voice lounges, and game nights</li>
+        <li>access to mystery pairings, advice circles, and other member-only features (where eligible)</li>
+        <li>onboarding instructions and a welcome guide, sent to your registered email</li>
+      </ul>
+      <p><strong>no physical product is shipped at any point.</strong> there is no courier, no parcel, no tracking number, no shipping address required. memberships do not come with any merchandise, hardware, or postal item.</p>
+    </div>
+  </div>
+
+  <div class="squiggle"><svg width="120" height="20" viewBox="0 0 120 20" fill="none"><path d="M2 10 Q 12 2, 22 10 T 42 10 T 62 10 T 82 10 T 102 10 T 118 10" stroke="#FF8FB5" stroke-width="2" stroke-linecap="round" opacity="0.4"/></svg></div>
+
+  <!-- 02 - the delivery steps -->
+  <div class="reveal mb-14">
+    <span class="section-num" style="color:#9FD9B5">/ 02 — how access reaches you</span>
+    <h2 class="display text-3xl sm:text-4xl mb-7 leading-tight">from payment to <em class="grad-cool">in.</em></h2>
+
+    <div class="glass rounded-2xl px-6 py-2">
+      <div class="step-row">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h4>payment confirmation</h4>
+          <p>razorpay processes your payment. once it succeeds, we receive an automatic confirmation — order id, plan, status. we never see your card or bank details.</p>
+          <span class="step-time">⌁ instant</span>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h4>welcome email + access link</h4>
+          <p>you receive an email at the address you used to pay. it contains your one-time discord invite link, a short onboarding note, and what to do next. check spam / promotions if you don't see it.</p>
+          <span class="step-time">⌁ within 5–10 minutes, usually less</span>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h4>discord invite acceptance</h4>
+          <p>click the link, accept the invite, you're in the server. you can join with an existing discord account or make one in two minutes.</p>
+          <span class="step-time">⌁ takes about 2 minutes</span>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h4>optional verification</h4>
+          <p>if you want full access to certain rooms (women-only sub-channel, mystery pairings, late-night talks), there's a one-time verification step. a human mod reviews it. selfie is deleted from our systems within 24 hours of approval. see our <a href="privacy.html">privacy policy</a> for detail.</p>
+          <span class="step-time">⌁ reviewed within 24 hours</span>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <h4>you're in</h4>
+          <p>full community access is now active for the entire duration of your membership (week / month / year / lifetime). general rooms are open immediately, even before verification.</p>
+          <span class="step-time">⌁ then onwards</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="squiggle"><svg width="120" height="20" viewBox="0 0 120 20" fill="none"><path d="M2 10 Q 12 2, 22 10 T 42 10 T 62 10 T 82 10 T 102 10 T 118 10" stroke="#9FD9B5" stroke-width="2" stroke-linecap="round" opacity="0.4"/></svg></div>
+
+  <!-- 03 -->
+  <div class="reveal mb-14">
+    <span class="section-num" style="color:#FFD56B">/ 03 — if your invite doesn't arrive</span>
+    <h2 class="display text-3xl sm:text-4xl mb-5 leading-tight">when something <em class="ital" style="color:#FFD56B">breaks.</em></h2>
+    <div class="legal-prose">
+      <p>occasionally an email gets stuck in spam, or razorpay's webhook takes a beat. if you've paid and don't have your invite within <strong>60 minutes</strong>:</p>
+      <ul>
+        <li>check your <strong>spam / promotions / updates</strong> tabs and search for "tuned"</li>
+        <li>confirm the email address you used at checkout (razorpay shows you a receipt — that's your reference)</li>
+        <li>if it's still not there, email <a href="mailto:hello@tuned.community">hello@tuned.community</a> with your razorpay order id</li>
+      </ul>
+      <p>we re-issue the invite manually within a few hours, often faster. if access still cannot be granted within 24 hours of your payment, you are entitled to a full refund under our <a href="refunds.html">refund policy</a>.</p>
+    </div>
+  </div>
+
+  <div class="squiggle"><svg width="120" height="20" viewBox="0 0 120 20" fill="none"><path d="M2 10 Q 12 2, 22 10 T 42 10 T 62 10 T 82 10 T 102 10 T 118 10" stroke="#FFD56B" stroke-width="2" stroke-linecap="round" opacity="0.4"/></svg></div>
+
+  <!-- 04 -->
+  <div class="reveal mb-14">
+    <span class="section-num" style="color:#C8A8E9">/ 04 — where the service is available</span>
+    <h2 class="display text-3xl sm:text-4xl mb-5 leading-tight">based in <em class="ital" style="color:#C8A8E9">india.</em></h2>
+    <div class="legal-prose">
+      <p>tuned is built and operated from india. the primary community runs on indian standard time (IST), and most events happen between 8pm and 1am IST.</p>
+      <p>anyone with an internet connection and a valid payment method accepted by razorpay can technically access the community, but the experience is designed for india. members joining from outside india are welcome — just expect timing to be a little inconvenient.</p>
+      <p>we may restrict access from specific regions where we are legally unable to operate. if your country is restricted, your payment will be declined at checkout rather than after.</p>
+    </div>
+  </div>
+
+  <div class="squiggle"><svg width="120" height="20" viewBox="0 0 120 20" fill="none"><path d="M2 10 Q 12 2, 22 10 T 42 10 T 62 10 T 82 10 T 102 10 T 118 10" stroke="#C8A8E9" stroke-width="2" stroke-linecap="round" opacity="0.4"/></svg></div>
+
+  <!-- 05 -->
+  <div class="reveal mb-14">
+    <span class="section-num" style="color:#FFB088">/ 05 — technical requirements</span>
+    <h2 class="display text-3xl sm:text-4xl mb-5 leading-tight">what <em class="ital" style="color:#FFB088">you'll need.</em></h2>
+    <div class="legal-prose">
+      <ul>
+        <li>a working email address (the one you used to pay)</li>
+        <li>a free discord account (we'll guide you through making one if you don't have one)</li>
+        <li>an internet connection — that's it. discord works on web, ios, android, mac, windows, and linux</li>
+        <li>headphones (recommended, not required) for the voice lounges</li>
+      </ul>
+      <p>tuned doesn't require any download from us. when our own app launches later this year, you'll have the option to use it, but discord access continues either way.</p>
+    </div>
+  </div>
+
+  <!-- closing card -->
+  <div class="reveal glass rounded-2xl p-7 mt-10">
+    <div class="font-mono text-[11px] uppercase tracking-widest mb-3" style="color:#FFB088">access trouble?</div>
+    <h3 class="display text-2xl mb-3">we'll fix it manually.</h3>
+    <p class="text-mute leading-relaxed mb-5">discord invite missing, payment confirmed but no email — write to us with your razorpay order id and we'll re-issue access within hours.</p>
+    <div class="flex flex-wrap gap-3">
+      <a href="mailto:hello@tuned.community" class="btn-primary px-5 py-2.5 rounded-full text-sm">hello@tuned.community</a>
+      <a href="refunds.html" class="btn-ghost px-5 py-2.5 rounded-full text-sm">refund policy →</a>
+    </div>
+  </div>
+
+</section>
+
+<!-- FOOTER -->
+<footer class="relative z-10 px-6 lg:px-10 py-12 border-t border-line">
+  <div class="max-w-6xl mx-auto">
+    <div class="flex flex-col md:flex-row justify-between items-start gap-8">
+      <div class="max-w-sm">
+        <div class="flex items-center gap-2.5 mb-3">
+          <svg viewBox="0 0 36 36" class="w-7 h-7">
+            <circle cx="18" cy="18" r="17" fill="#0E0817" stroke="#FF7A66" stroke-width="1.5"/>
+            <g class="spin-slow" style="transform-origin: 18px 18px;">
+              <circle cx="18" cy="18" r="5" fill="#FF7A66"/>
+              <circle cx="18" cy="18" r="1.5" fill="#0E0817"/>
+            </g>
+          </svg>
+          <span class="display text-2xl">tune<em class="italic" style="color:#FF8FB5">d</em></span>
+        </div>
+        <p class="text-mute text-sm">a private online social community for indian gen z.<br>built by two friends. still in beta. say hi.</p>
+      </div>
+      <div class="flex flex-col gap-3">
+        <div class="font-mono text-[10px] uppercase tracking-widest text-dim">fine print</div>
+        <div class="flex flex-wrap gap-x-5 gap-y-2 text-sm text-mute">
+          <a href="privacy.html" class="hover:text-ink transition">privacy</a>
+          <a href="terms.html" class="hover:text-ink transition">terms</a>
+          <a href="refunds.html" class="hover:text-ink transition">refunds</a>
+          <a href="delivery.html" class="hover:text-ink transition" style="color:#FAF0E6;">digital access</a>
+          <a href="contact.html" class="hover:text-ink transition">contact</a>
+        </div>
+      </div>
+    </div>
+    <div class="mt-10 pt-6 border-t border-line flex flex-col sm:flex-row justify-between gap-3 text-xs font-mono text-dim uppercase tracking-wider">
+      <div>© 2026 tuned · built in india with ♡</div>
+      <div>v1 · pre-launch</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  (function() {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) { entry.target.classList.add('in-view'); observer.unobserve(entry.target); }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+  })();
+</script>
+
+</body>
+</html>
