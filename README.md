@@ -1,1 +1,1 @@
-Find ur vibe here->
+Find ur vibe here
